@@ -27,6 +27,8 @@ class AppUrls {
   static const ticket = "${baseUrl}ticket";
   static const tickets = "${baseUrl}tickets";
   static const ticketsConfig = "${baseUrl}ticketConfig";
+
+  static const uploadCallLogs = "${baseUrl}callLogs";
   //static const otTicket = "${rootUrl}ot_ticket";
   static const urlImgUpload = "${baseUrl}fileUpload";
 

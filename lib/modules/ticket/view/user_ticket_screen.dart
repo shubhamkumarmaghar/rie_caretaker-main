@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:caretaker/modules/home/model/ticketModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +13,7 @@ import '../../../utils/const/api.dart';
 import '../../../utils/const/app_urls.dart';
 import '../../../utils/const/appbar_widget.dart';
 import '../../../utils/const/widgets.dart';
+import '../model/ticketModel.dart';
 
 class UserTickets extends StatefulWidget {
   const UserTickets({super.key});

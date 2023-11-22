@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
-import 'modules/home/view/main_screen.dart';
+import 'modules/main_screen/view/main_screen.dart';
 
 void main() {
   runApp(const MyApp());

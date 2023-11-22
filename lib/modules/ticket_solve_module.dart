@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
 import 'package:caretaker/models/ot_ticketModel.dart';
-import 'package:caretaker/modules/home/model/ticketModel.dart';
+import 'package:caretaker/modules/ticket/model/ticketModel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

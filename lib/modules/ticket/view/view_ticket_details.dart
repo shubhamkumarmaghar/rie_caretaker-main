@@ -33,6 +33,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
   Widget build(BuildContext context) {
     var data = controller.getSingleTicketDetails.data;
     return Scaffold(
+      backgroundColor: CustomTheme.appTheme4,
       appBar: AppBar(
         leading: BackButton(
           color: CustomTheme.white,
@@ -52,7 +53,8 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
         margin: EdgeInsets.all(10),
           child: Column(
             children: [
-              Card(
+              Card(color: CustomTheme.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 margin: EdgeInsets.all(10),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -117,11 +119,11 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
             width: Get.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
+              color: CustomTheme.appTheme4,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
+                  blurRadius: 2,
                   offset: const Offset(0, 2),
                 ),],),
 

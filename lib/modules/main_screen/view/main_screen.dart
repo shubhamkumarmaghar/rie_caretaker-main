@@ -1,7 +1,5 @@
+import 'dart:developer';
 import 'dart:io';
-
-import 'package:caretaker/modules/home/view/home_screen.dart';
-import 'package:caretaker/modules/home/view/user_ticket_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +15,9 @@ import '../../../utils/const/appbar_widget.dart';
 import '../../../utils/view/rie_widgets.dart';
 import '../../login_screen.dart';
 import '../../ot_ticket_screen.dart';
-import 'get_all_ticket.dart';
+import '../../ticket/view/get_all_ticket.dart';
+import '../../ticket/view/home_screen.dart';
+import '../controller/home_controller.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -25,15 +25,17 @@ class MainPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   var _mainHeight;
   var _mainWidth;
-  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  // String imageUrl = '';
+
+  HomeController homeController = Get.put(HomeController());
+
+
   @override
   void initState() {
     // fetchUserDet();
@@ -93,7 +95,7 @@ class _MainPageState extends State<MainPage> {
                       child: Container(
                           height: 26,
                           width: 26,
-                          child: Icon(Icons.add_home_work_outlined))),
+                          child: Icon(Icons.add_home_work_outlined,color: Colors.white,))),
                 ),
                 const SizedBox(
                   width: 20,
@@ -105,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                     child: Container(
                         height: 26,
                         width: 26,
-                        child: Icon(Icons.signpost_rounded))),
+                        child: Icon(Icons.signpost_rounded,color: Colors.white,))),
               ],
             ),
           ),
@@ -138,11 +140,11 @@ class _MainPageState extends State<MainPage> {
                       ),
                       Text(
                         GetStorage().read(Constants.userId).toString()??'Guest',
-                        style: TextStyle(color: CustomTheme.appTheme,fontWeight: FontWeight.w600,fontSize: 14),
+                        style: TextStyle(color: CustomTheme.appThemeContrast1,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
                       Spacer(),
                       Text('V.C ${_packageInfo.version}',
-                        style: TextStyle(color: CustomTheme.appTheme,fontWeight: FontWeight.w600,fontSize: 14),
+                        style: TextStyle(color: CustomTheme.appThemeContrast1,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
                       SizedBox(
                         width: 10,
@@ -162,6 +164,7 @@ class _MainPageState extends State<MainPage> {
                             'assets/images/splash_logo.png',
                             height: 40,
                             width: 40,
+
                           ),
                           callBack: () {
                             Get.to(GetAllTickets());
@@ -194,14 +197,16 @@ class _MainPageState extends State<MainPage> {
                       ),
                       Container(
                         child: _gridInput(
-                          hint: 'Pending Payment',
+                          hint: 'Update call logs',
                           icon: Image.asset(
                             'assets/images/splash_logo.png',
                             height: 40, width: 40,
                             //color: CustomTheme.appTheme,
                           ),
-                          callBack: () =>{
-
+                          callBack: () {
+                      String date = '${DateTime.now().toLocal()}';
+                      log('xoxo :: ${date}');
+                        homeController.calllogs(lastdate: '2023-11-22 13:05:01.142655' );
                           }
                         ),
                       ),
@@ -247,45 +252,6 @@ class _MainPageState extends State<MainPage> {
         ),*/
       drawer: _getDrawer(context: context),
     );
-  }
-
-  List<Widget> _buildScreens(BuildContext context) {
-    return [
-      const MyHomePage(),
-     // const UserTickets(),
-      const GetAllTickets(),
-     // const OtTicketsPage(),
-      //const CallLogScreen(),
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.add_home_work_outlined),
-        title: ("Available Rooms"),
-        activeColorPrimary: CustomTheme.appTheme,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.signpost_rounded),
-        title: ("User Ticket"),
-        activeColorPrimary: CustomTheme.appTheme,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-    /*  PersistentBottomNavBarItem(
-        icon: const Icon(Icons.signpost_rounded),
-        title: ("create Ticket"),
-        activeColorPrimary: CustomTheme.appTheme,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),*/
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.phone_callback_rounded),
-      //   title: ("CALL LOGS"),
-      //   activeColorPrimary: Constants.primaryColor,
-      //   inactiveColorPrimary: CupertinoColors.systemGrey,
-      // ),
-    ];
   }
 
   Widget _getDrawer({
@@ -423,6 +389,8 @@ class _MainPageState extends State<MainPage> {
       },
     );
   }
+
+
   Widget _gridInput(
       {required String hint, required Image icon, required Function callBack}) {
     return GestureDetector(
@@ -450,8 +418,9 @@ class _MainPageState extends State<MainPage> {
             FittedBox(
               child: Text(hint,
                   style: TextStyle(
-                    color: CustomTheme.appThemeContrast,
-                    fontWeight: FontWeight.w500,fontFamily: 'Montserrat-Regular',
+                    color: CustomTheme.appThemeContrast1,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat-Regular',
                     fontSize: 12,
                   ),
                   textAlign: TextAlign.center),

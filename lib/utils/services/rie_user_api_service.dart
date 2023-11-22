@@ -147,7 +147,7 @@ class RIEUserApiService extends GetxController {
         headers: fromLogin?{}:await getHeaders,
       );
       return await _response(response,
-          url: Uri.https(endPoint,).toString());
+          url: Uri.parse(endPoint,).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -207,7 +207,7 @@ class RIEUserApiService extends GetxController {
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
-          log('Logout Res ::  ' + response.body);
+          log('Logout Res ::  ${response.body}');
           return true;
         }
       }
@@ -224,7 +224,7 @@ class RIEUserApiService extends GetxController {
     log('Status Code :: ${response.statusCode} -- $url    ${response.body}');
     switch (response.statusCode) {
       case 200:
-        log('Response Data :: ' + response.body);
+        log('Response Data :: ${response.body}');
         return response.body.isNotEmpty
             ? json.decode(response.body)
             : {'message': 'failure'};
@@ -275,7 +275,8 @@ class RIEUserApiService extends GetxController {
     log(error.toString());
     RIEWidgets.getToast(
         message: error['message'] ?? 'failure', color: Color(0xffFF0000));
-    Get.offAll(LoginScreen());
+
+  //  Get.offAll(LoginScreen());
 
     return {'message': 'failure '+ error['msg']};
   }

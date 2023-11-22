@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:caretaker/models/care_taker_model.dart';
-import 'package:caretaker/modules/home/view/main_screen.dart';
+import 'package:caretaker/modules/main_screen/view/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:caretaker/modules/home/view/view_ticket_details.dart';
+import 'package:caretaker/modules/ticket/view/view_ticket_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +32,7 @@ class _GetAllTicketsState extends State<GetAllTickets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomTheme.appTheme4,
       appBar: AppBar(
         leading: BackButton(
           color: CustomTheme.white,
@@ -94,7 +95,6 @@ class TicketListScreen extends StatelessWidget {
           await ticketController.fetchTicketDetails('${data?.id.toString()}');
           Get.to(ViewTicketDetails());
         },
-
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             margin: EdgeInsets.symmetric(
@@ -102,49 +102,14 @@ class TicketListScreen extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: CustomTheme.white,
-              border: Border.all(color: CustomTheme.appTheme,
-              /*    gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  /*    Color(0xfff2d5f7),
-                      Color(0xffe6acef),
-                      Color(0xffd982e6),
-                      Color(0xffcd59de),
-                      Color(0xffc02fd6),*/
 
-                  /*  Color(0xffd1dce6),
-                      Color(0xffa2bace),
-                      Color(0xff7497b5),
-                      Color(0xff45759d),
-                      Color(0xff175284),
-*/
-                  Color(0xffee216c),
-                  Color(0xffee216c),
-                  Color(0xffee216c),
-                  Color(0xfff14d89),
-                  Color(0xfff57aa7),
-                  Color(0xfff8a6c4),
-                  Color(0xfffcd3e2),
-                  // Colors.red.shade800,
-                  //Colors.red.shade700,
-                  //Colors.red.shade500,
-                  // Colors.red.shade400,
-                  // Colors.red.shade300,
-                  // Colors.black45,
-                  //Colors.black54,
-                  //   Colors.black87,
-                  // Colors.black,
-                ]
-
-            ),
-*/
-            ),borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
               BoxShadow(
-              blurRadius: 1,
-              color: CustomTheme.skyBlue,blurStyle:BlurStyle.solid ,
-              spreadRadius: 1,
+              blurRadius: 3,
+              color: CustomTheme.grey,
+                blurStyle:BlurStyle.outer ,
+              //spreadRadius: 0.5,
             ),
             ],
             ),
@@ -161,7 +126,7 @@ class TicketListScreen extends StatelessWidget {
                             Text(
                               'Ticket Id : ${data?.id} ',
                               style:
-                              TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                              TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                             ),
                             SizedBox(
                               height: 1,
@@ -170,11 +135,11 @@ class TicketListScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   'Flat : ${data?.unit} ',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 13),
                                 ),
-                                Text('Updated on :${dateConvert('${data?.createdOn}')}',
+                                Text('Created on :${dateConvert('${data?.createdOn}')}',
                                   style: TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.w500),
+                                      fontSize: 13, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -185,12 +150,12 @@ class TicketListScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   'Category ${data?.category} ',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                                 Text('Updated on :${dateConvert('${data?.updatedOn}')}'
                                   ,
                                   style: TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.w500),
+                                      fontSize: 13, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -202,12 +167,12 @@ class TicketListScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   'Added By  :  ${data?.addedBy}',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                                 Text(
                                   'Status  : ${data?.status.toString().capitalizeFirst}',
                                   style: TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.w500),
+                                      fontSize: 13, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -216,7 +181,7 @@ class TicketListScreen extends StatelessWidget {
                             ),
                             Text(
                               'Description  :  ${data?.description}',maxLines: 3,
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 13),
                             ),
 
                           ],
