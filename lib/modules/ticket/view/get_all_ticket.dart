@@ -8,6 +8,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:intl/intl.dart';
 
 import '../../../theme/custom_theme.dart';
+import '../../../utils/const/app_urls.dart';
 import '../controller/get_all_ticket_controller.dart';
 import '../model/TicketListModel.dart';
 import 'create_ticket.dart';
@@ -43,9 +44,9 @@ class _GetAllTicketsState extends State<GetAllTickets> {
                 bottomRight: Radius.circular(15))),
         titleSpacing: -10,
         backgroundColor: CustomTheme.appTheme,
-        title: Padding(
+        title: const Padding(
           padding: EdgeInsets.all(10),
-          child: Text('Get All Tickets '),
+          child: Text('My Tickets'),
         ),
       ),
       body: GetBuilder<AllTicketController>(
@@ -59,16 +60,17 @@ class _GetAllTicketsState extends State<GetAllTickets> {
       floatingActionButton: Container(
         width: Get.width*0.35
       ,margin: EdgeInsets.all(10),
-        child: FloatingActionButton( shape: RoundedRectangleBorder(
+        child: FloatingActionButton(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)),
          onPressed: () async{
            await controller.fetchTicketConfigListDetails();
-              Get.to(CreateTicket());
+              Get.to(const CreateTicket());
            },
            backgroundColor: CustomTheme.appTheme,
            child: Row(
              children: const [
-               Text('   Create Ticket  '),
+               FittedBox(child: Text('   Create Ticket  ')),
                Icon(CupertinoIcons.add_circled),
              ],
            ),
@@ -115,111 +117,105 @@ class TicketListScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: SizedBox(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Ticket Id : ${data?.id} ',
-                              style:
-                              TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 1,
-                            ),
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Flat : ${data?.unit} ',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Text('Created on :${dateConvert('${data?.createdOn}')}',
-                                  style: TextStyle(
-                                      fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 1,
-                            ),
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Category ${data?.category} ',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Text('Updated on :${dateConvert('${data?.updatedOn}')}'
-                                  ,
-                                  style: TextStyle(
-                                      fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 1,
-                            ),
-
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Added By  :  ${data?.addedBy}',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Text(
-                                  'Status  : ${data?.status.toString().capitalizeFirst}',
-                                  style: TextStyle(
-                                      fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 1,
-                            ),
-                            Text(
-                              'Description  :  ${data?.description}',maxLines: 3,
-                              style: TextStyle(fontSize: 13),
-                            ),
-
-                          ],
-                        ),
-                      ),
+                    Text(
+                      'Ticket Id : ${data?.id} ',
+                      style:
+                      TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                     ),
                     SizedBox(
-                      width: 25,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      height: 5,
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Flat : ${data?.unit} ',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        Text(
+                          'Category ${data?.category} ',
+                          style: TextStyle(fontSize: 13),
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Created on :${dateConvert('${data?.createdOn}')}',
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+
+                        Text(
+                          'Added By  :  ${data?.addedBy}',
+                          style: TextStyle(fontSize: 13),
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Updated on :${dateConvert('${data?.updatedOn}')}'
+                          ,
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          'Status  : ${data?.status.toString().capitalizeFirst}',
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Description  :  ${data?.description}',maxLines: 3,
+                      style: TextStyle(fontSize: 13),
+                    ),
+
+                  ],
+                ),
+                SizedBox(
+                  width: 25,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      /*   Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          /*   Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.currency_rupee,
-                                size: 2.5.h,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Plan',
-                                  style: TextStyle(
-                                      fontSize: 14.sp, fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2.w,
-                              ),
-                            ],
-                          ),*/
+                          Icon(
+                            Icons.currency_rupee,
+                            size: 2.5.h,
+                          ),
+                          Flexible(
+                            child: Text(
+                              'Plan',
+                              style: TextStyle(
+                                  fontSize: 14.sp, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                           SizedBox(
-                            height: 1,
+                            width: 2.w,
                           ),
                         ],
+                      ),*/
+                      SizedBox(
+                        height: 5,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -228,25 +224,6 @@ class TicketListScreen extends StatelessWidget {
       },);
   }
 
-  String dateConvert(String date){
-    String dateTime;
-    try{
-    if(date.isNotEmpty) {
-      DateTime datee = DateTime.parse(date);
-      dateTime = DateFormat('dd-MM-yyyy, hh:mm a').format(datee);
-
-    }
-    else{
-      dateTime='NA';
-    }
-    }
-    catch (e)
-    {
-      log('error exception ::$e');
-      dateTime='NA';
-    }
-    return dateTime;
-  }
 
 }
 

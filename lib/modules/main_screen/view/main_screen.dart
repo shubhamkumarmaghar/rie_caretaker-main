@@ -7,17 +7,20 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:workmanager/workmanager.dart';
 
+import '../../../main.dart';
 import '../../../theme/custom_theme.dart';
 import '../../../utils/const/app_urls.dart';
 import '../../../utils/const/appbar_widget.dart';
 import '../../../utils/view/rie_widgets.dart';
 import '../../login_screen.dart';
-import '../../ot_ticket_screen.dart';
+
+import '../../move_in_out/views/move_in_out_view.dart';
 import '../../ticket/view/get_all_ticket.dart';
-import '../../ticket/view/home_screen.dart';
+
 import '../controller/home_controller.dart';
+import 'caretaker_profile.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -32,12 +35,18 @@ class MainPageState extends State<MainPage> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   var _mainHeight;
   var _mainWidth;
-
+  bool singleTap = true;
   HomeController homeController = Get.put(HomeController());
 
-
   @override
-  void initState() {
+  void initState()  {
+    var phone = GetStorage().read(Constants.phonekey);
+    if(GetStorage().read(Constants.callSync)==1){
+    if( GetStorage().read(Constants.background)==false && phone != null) {
+      Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
+     // await homeController.getLastCallTimestamp();
+    }
+    }
     // fetchUserDet();
     _initPackageInfo();
     super.initState();
@@ -68,6 +77,7 @@ class MainPageState extends State<MainPage> {
     PersistentTabController controller;
     controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
+     // backgroundColor: CustomTheme.errorColor,
         appBar: appBarWidget('RENTISEASY ADMIN', '', context, false),
       bottomNavigationBar: Container(
         decoration:  BoxDecoration(
@@ -102,7 +112,10 @@ class MainPageState extends State<MainPage> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Get.to(GetAllTickets());
+                      Get.to(
+                          ProfilePage()
+                         // GetAllTickets()
+                      );
                     },
                     child: Container(
                         height: 26,
@@ -123,7 +136,7 @@ class MainPageState extends State<MainPage> {
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.only(bottom: 15),
             decoration: BoxDecoration(
-              color: Colors.white,
+            //  color: CustomTheme.errorColor,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -139,19 +152,19 @@ class MainPageState extends State<MainPage> {
                         width: 10,
                       ),
                       Text(
-                        GetStorage().read(Constants.userId).toString()??'Guest',
-                        style: TextStyle(color: CustomTheme.appThemeContrast1,fontWeight: FontWeight.w600,fontSize: 14),
+                        GetStorage().read(Constants.usernamekey).toString()??'Guest',
+                        style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
                       Spacer(),
                       Text('V.C ${_packageInfo.version}',
-                        style: TextStyle(color: CustomTheme.appThemeContrast1,fontWeight: FontWeight.w600,fontSize: 14),
+                        style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -161,26 +174,29 @@ class MainPageState extends State<MainPage> {
                         child: _gridInput(
                           hint: 'Show Tickets',
                           icon: Image.asset(
-                            'assets/images/splash_logo.png',
+                            'assets/images/tickets.png',
                             height: 40,
                             width: 40,
+                            color: CustomTheme.skyBlue,
 
                           ),
                           callBack: () {
-                            Get.to(GetAllTickets());
+                            Get.to(const GetAllTickets());
                           }
                         ),
                       ),
                       Container(
                         child: _gridInput(
-                          hint: 'Search Booking',
+                          hint: 'Move In/Out',
                           icon: Image.asset(
-                            'assets/images/splash_logo.png',
-                            height: 40, width: 40,
+                            'assets/images/home-owner.png',
+                            height: 40, width: 40,color: CustomTheme.skyBlue,
 
                             //color: CustomTheme.appTheme,
                           ),
                           callBack: () {
+                            Get.to(const MoveInOutView());
+
                           //  showSearchBookingDialog(context);
 
                             /*  Navigator.pop(context);
@@ -199,14 +215,31 @@ class MainPageState extends State<MainPage> {
                         child: _gridInput(
                           hint: 'Update call logs',
                           icon: Image.asset(
-                            'assets/images/splash_logo.png',
+                            'assets/images/phone.png',
                             height: 40, width: 40,
                             //color: CustomTheme.appTheme,
                           ),
-                          callBack: () {
-                      String date = '${DateTime.now().toLocal()}';
-                      log('xoxo :: ${date}');
-                        homeController.calllogs(lastdate: '2023-11-22 13:05:01.142655' );
+                          callBack: () async {
+                            if(GetStorage().read(Constants.callSync)==1){
+                            if(homeController.singleTap) {
+                              homeController.singleTap=false;
+                              String date = GetStorage().read(
+                                  Constants.lastCallStamp);
+                              log('xoxo :: ${date}  ${date.replaceRange(
+                                  10, 11, ' ')}');
+                              await homeController.callLogs(
+                                  lastdate: date.replaceRange(10, 11, ' '));
+                              setState(() {
+
+                              });
+                            }
+                            else
+                            {
+                              RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
+                            }}
+                            else{
+                              RIEWidgets.getToast(message: 'This Feature is not available for You', color: Colors.white);
+                            }
                           }
                         ),
                       ),
@@ -264,6 +297,78 @@ class MainPageState extends State<MainPage> {
         height: Get.height,
         child: ListView(
           children: [
+            SizedBox(height: Get.height*0.05,),
+       GetStorage().read(Constants.callSync)==1 ? Container(
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
+        height: _mainHeight * 0.06,
+        child: ListTile(
+          leading: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  color: CustomTheme.appTheme.withAlpha(20),
+                  borderRadius: BorderRadius.circular(5)),
+              child: Icon(
+                Icons.call,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),),
+          title: Text(
+            'Call logs',
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+          trailing:Obx(
+                ()=> CupertinoSwitch(value: homeController.logValue.value, onChanged: (value) async {
+              if(homeController.logValue.value)
+              {
+                homeController.logValue.value = false;
+
+                Workmanager().cancelAll();
+              }
+              else{
+                homeController.logValue.value = true;
+                log("third logs 1");
+                await homeController.getLastCallTimestamp();
+                Workmanager().registerPeriodicTask('1', 'GetApiData',
+                    initialDelay: const Duration(seconds: 10),
+                    inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+                    existingWorkPolicy: ExistingWorkPolicy.append);
+              }
+
+
+            }
+            ),
+          ),
+        ),
+      ):Container(),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.person,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Profile',
+              onTap: ()
+              {
+                Get.to(ProfilePage());
+              },
+            ),
+              getTile(
+              context: context,
+              leading: Icon(
+                Icons.clear_all_rounded,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Get All Tickets',
+              onTap: ()
+               {
+                 Get.to(GetAllTickets());
+              },
+            ),
+
             getTile(
               context: context,
               leading: Icon(
@@ -279,28 +384,15 @@ class MainPageState extends State<MainPage> {
                 //await Workmanager().cancelAll();
                 //bool deletedAllValues = await shared.clearAll();
                 GetStorage().erase();
-
                 Navigator.of(context).pop();
+                Workmanager().cancelAll();
                 Get.offAll(LoginScreen());
-              /*  if (deletedAllValues) {
+                /*  if (deletedAllValues) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       AppRoutes.loginPage, (route) => false);
                 } else {
                   log('NOT ABLE TO DELETE VALUES FROM SP');
                 }*/
-              },
-            ),
-              getTile(
-              context: context,
-              leading: Icon(
-                Icons.clear_all_rounded,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),
-              title: 'Get All Tickets',
-              onTap: ()
-               {
-                 Get.to(GetAllTickets());
               },
             ),
           ],
@@ -416,14 +508,18 @@ class MainPageState extends State<MainPage> {
               height: _mainHeight * 0.01,
             ),
             FittedBox(
-              child: Text(hint,
-                  style: TextStyle(
-                    color: CustomTheme.appThemeContrast1,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Montserrat-Regular',
-                    fontSize: 12,
-                  ),
-                  textAlign: TextAlign.center),
+              child: Container(
+                width: _mainWidth*0.25,
+                child: Text(hint,
+                    maxLines: 3,
+                    style: TextStyle(
+                      color: CustomTheme.grey,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Montserrat-Regular',
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center),
+              ),
             ),
           ],
         ),
@@ -436,7 +532,8 @@ class MainPageState extends State<MainPage> {
         required Icon leading,
         required String title,
         required Function onTap}) {
-    return Container(
+    return
+      Container(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
 
       /*decoration: BoxDecoration(

@@ -6,6 +6,8 @@ import 'package:caretaker/models/care_taker_model.dart';
 import 'package:caretaker/modules/main_screen/view/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +28,7 @@ class _LoginState extends State<LoginScreen> {
   TextEditingController unameController = TextEditingController();
   TextEditingController uPasswordController = TextEditingController();
 
-  Widget inputFelid(
+  Widget inputField(
       String hind, TextEditingController tController, double bottom) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
@@ -35,64 +37,11 @@ class _LoginState extends State<LoginScreen> {
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7),
-          color: CustomTheme.appTheme,
+          color: CustomTheme.white,
           border: Border.all(color: const Color.fromARGB(255, 227, 225, 225)),
         ),
         child: TextField(
           controller: tController,
-          decoration: InputDecoration(
-              hoverColor: CustomTheme.appThemeContrast2,
-              hintText: hind,
-              border: InputBorder.none),
-        ),
-      ),
-    );
-  }
-
-  Widget inputFeildPh(
-      String hind, TextEditingController tController, double bottom) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottom),
-      child: Container(
-        padding: const EdgeInsets.all(3),
-        margin: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7),
-          color: CustomTheme.appThemeContrast2,
-          border: Border.all(color: const Color.fromARGB(255, 227, 225, 225)),
-        ),
-        child: TextField(
-          controller: tController,
-          keyboardType: TextInputType.phone,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-          ],
-          maxLength: 10,
-          decoration: InputDecoration(
-              counter: const SizedBox(),
-              hoverColor: CustomTheme.appThemeContrast2,
-              hintText: hind,
-              border: InputBorder.none),
-        ),
-      ),
-    );
-  }
-
-  Widget inputFeildEmail(
-      String hind, TextEditingController tController, double bottom) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottom),
-      child: Container(
-        padding: const EdgeInsets.all(3),
-        margin: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7),
-          color: CustomTheme.appTheme,
-          border: Border.all(color: const Color.fromARGB(255, 227, 225, 225)),
-        ),
-        child: TextField(
-          controller: tController,
-          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
               hoverColor: CustomTheme.appThemeContrast2,
               hintText: hind,
@@ -103,7 +52,7 @@ class _LoginState extends State<LoginScreen> {
   }
 
   void careTakerRequest() async {
-    var sharedPreferences = await _prefs;
+
     //CareTakerModel? ctModel;
     CareTakerLoginModelNew ctModel;
     try {
@@ -115,7 +64,7 @@ class _LoginState extends State<LoginScreen> {
         ctModel = CareTakerLoginModelNew.fromJson(result);
        // ctModel = CareTakerModel.fromJson(result);
         GetStorage().write(Constants.isLogin, true);
-        GetStorage().write(Constants.token, ctModel.token.toString());
+        GetStorage().write(Constants.callSync, ctModel.callSync.toString());
         //sharedPreferences.setBool(Constants.isLogin, true);
         GetStorage().write(Constants.token, ctModel.token.toString());
         GetStorage().write(Constants.userId, ctModel.userId.toString());
@@ -125,9 +74,12 @@ class _LoginState extends State<LoginScreen> {
         GetStorage().write(Constants.profileUrl, '${ctModel.image}');
         GetStorage().write(Constants.usernamekey, '${ctModel.name}');
         GetStorage().write(Constants.emailkey, '${ctModel.email}');
+        GetStorage().write(Constants.rolekey, '${ctModel.role}');
         log(GetStorage().read(Constants.token));
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const MainPage()));
+
+        Get.offAll(const MainPage());
+       /* Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const MainPage()));*/
       } else {
         showCustomToast(context, 'Invalid Credentials');
       }
@@ -170,8 +122,8 @@ class _LoginState extends State<LoginScreen> {
                 title("Welcome", 27),
                 titleClr("RENTISEASY ADMIN", 20, Colors.grey, FontWeight.bold),
                 height(0.05),
-                inputFelid('User name', unameController, 5),
-                inputFelid('Password', uPasswordController, 10),
+                inputField('Phone Number', unameController, 5),
+                inputField('Password', uPasswordController, 10),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: CustomTheme.appTheme,

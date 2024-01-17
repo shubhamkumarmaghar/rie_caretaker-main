@@ -1,18 +1,20 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:caretaker/modules/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
-final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+import 'package:intl/intl.dart';
 
 class AppUrls {
   static const String phone = "+918867319944";
   static const String fontFamilyKanit = 'Kanit';
-  static const baseUrl = "https://api.rentiseazy.com/aa/";
+  static const productionUrl  = "https://api.rentiseazy.com/aa/";
+  static const developmentUrl = "https://test-api.rentiseazy.com/aa/";
+  static const baseUrl = developmentUrl;
   static const imagesRootUrl =
       "http://networkgroups.in/prisma/rentitezy/images/";
   // static const rootUrl = "http://networkgroups.in/prisma/rentitezy/";
@@ -27,8 +29,11 @@ class AppUrls {
   static const ticket = "${baseUrl}ticket";
   static const tickets = "${baseUrl}tickets";
   static const ticketsConfig = "${baseUrl}ticketConfig";
-
   static const uploadCallLogs = "${baseUrl}callLogs";
+  static const getLastCallTimestamp = "${baseUrl}lastCall";
+  static const getMoveInOut = "${baseUrl}moveInOuts";
+  static const moveIn = "${baseUrl}moveIn";
+  static const moveOut = "${baseUrl}moveOut";
   //static const otTicket = "${rootUrl}ot_ticket";
   static const urlImgUpload = "${baseUrl}fileUpload";
 
@@ -72,16 +77,31 @@ class AppUrls {
 }
 
 executeLogOut(BuildContext context) async {
-  final SharedPreferences prefs = await _prefs;
   GetStorage().write(Constants.isLogin, false);
-  GetStorage().write(Constants.usernamekey, "guest");
-  GetStorage().write(Constants.userId, "guest");
-  GetStorage().write(Constants.phonekey, "guest");
-  GetStorage().write(Constants.emailkey, "guest");
 
   Navigator.pop(context);
   Navigator.pushAndRemoveUntil(context,
       MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
+}
+
+String dateConvert(String date){
+  String dateTime;
+  try{
+    if(date.isNotEmpty) {
+      DateTime datee = DateTime.parse(date);
+     // dateTime = DateFormat('dd-MM-yyyy, hh:mm a').format(datee);
+      dateTime = DateFormat('dd-MM-yyyy').format(datee);
+    }
+    else{
+      dateTime='NA';
+    }
+  }
+  catch (e)
+  {
+    log('error exception ::$e');
+    dateTime='NA';
+  }
+  return dateTime;
 }
 
 String convertToAgo(String dateTime) {
@@ -108,10 +128,14 @@ class Constants {
   static const profileUrl = "profileUrl";
   static const userId = "userId";
   static const token = "token";
+  static const callSync = 'callSync';
   static const isLogin = "isLogin";
   static const emailkey = "emailkey";
   static const phonekey = "phonekey";
+  static const rolekey = "role";
+  static const lastCallStamp = "lastCall";
   static const currency = 'Rs.';
+  static const background = 'background';
 
 
 }

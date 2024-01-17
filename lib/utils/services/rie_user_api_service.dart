@@ -28,7 +28,6 @@ class RIEUserApiService extends GetxController {
   }
 
   Future<Map<String, String>> get getHeaders async {
-
     return {
         'admin-auth-token':
         (registeredToken ?? await _getRegisteredToken()).toString()
@@ -116,7 +115,7 @@ class RIEUserApiService extends GetxController {
   Future<dynamic>  getApiCallWithURL({
     required String endPoint,
   }) async {
-    log('URL :: $endPoint ');
+    log('URL :: $endPoint ${await getHeaders}');
     try {
       final response = await http.get(
           Uri.parse(
@@ -275,9 +274,9 @@ class RIEUserApiService extends GetxController {
     log(error.toString());
     RIEWidgets.getToast(
         message: error['message'] ?? 'failure', color: Color(0xffFF0000));
-
-  //  Get.offAll(LoginScreen());
-
+if(error['message'] =='Session expired') {
+  Get.offAll(LoginScreen());
+}
     return {'message': 'failure '+ error['msg']};
   }
 
