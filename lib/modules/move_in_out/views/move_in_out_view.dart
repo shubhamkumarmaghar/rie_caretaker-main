@@ -231,7 +231,8 @@ class ProfileContainerState extends State<ProfileContainer> {
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       customText(text: 'Email: ${inData?.email}'),
-                      customText(text: 'OnBoarding  :  ${inData?.onboarding}'),
+                      customText(text: 'Rent  : ${inData?.rent}'),
+                    //  customText(text: 'OnBoarding  :  ${inData?.onboarding}'),
                     ],
                   ),
                   SizedBox(
@@ -240,11 +241,11 @@ class ProfileContainerState extends State<ProfileContainer> {
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Rent  : ${inData?.rent}'),
-                      customText(text: 'Deposit : ${inData?.deposit}'),
+
+
                     ],
                   ),
-                  const SizedBox(
+                /*  const SizedBox(
                     height: 5,
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,20 +253,24 @@ class ProfileContainerState extends State<ProfileContainer> {
                       customText(text: 'From  :  ${dateConvert('${inData?.from}')}'),
                       customText(text: 'To  :  ${dateConvert('${inData?.from}')}'),
                     ],
-                  ),
+                  ),*/
                   const SizedBox(
                     height: 5,
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Move In  :  ${dateConvert('${inData?.moveIn}')}'),
-                      customText(text: 'Move Out  :  ${dateConvert('${inData?.moveOut}')}'),
+                      customText(text: 'Pending :  ${inData?.pending}'),
+                      customText(text: 'Deposit : ${inData?.deposit}'),
+
+                     // customText(text: 'Move Out  :  ${dateConvert('${inData?.moveOut}')}'),
                     ],
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Pending :  ${inData?.pending}'),
+
+                      customText(text: 'Move In  :  ${dateConvert('${inData?.moveIn}')}',textSize: 15),
                       inData.checkedIn == 0 ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade600),
                           onPressed: ()async {
 
                             moveInOutController.showMoveInAlertDialog(context,inData.id,"Move In");
@@ -326,7 +331,8 @@ class ProfileContainerState extends State<ProfileContainer> {
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       customText(text: 'Email: ${outData?.email}'),
-                      customText(text: 'OnBoarding  :  ${outData?.onboarding}'),
+                      customText(text: 'Rent  : ${outData?.rent}'),
+
 
                     ],
                   ),
@@ -336,11 +342,11 @@ class ProfileContainerState extends State<ProfileContainer> {
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Rent  : ${outData?.rent}'),
-                      customText(text: 'Deposit :${outData?.deposit}'),
+                      //  customText(text: 'OnBoarding  :  ${outData?.onboarding}'),
+
                     ],
                   ),
-                  const SizedBox(
+               /*   const SizedBox(
                     height: 5,
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -348,27 +354,27 @@ class ProfileContainerState extends State<ProfileContainer> {
                       customText(text: 'From  :  ${dateConvert('${outData?.from}')}'),
                       customText(text: 'To  :  ${dateConvert('${outData?.from}')}'),
                     ],
-                  ),
+                  ),*/
                   const SizedBox(
                     height: 5,
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Move In  :  ${dateConvert('${outData?.moveIn}')}'),
-                      customText(text: 'Move Out  :  ${dateConvert('${outData?.moveOut}')}'),
+                     // customText(text: 'Move In  :  ${dateConvert('${outData?.moveIn}')}'),
+                      customText(text: 'Pending  :  ${dateConvert('${outData?.pending}')}'),
+                      customText(text: 'Deposit :${outData?.deposit}'),
                     ],
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Pending :  ${outData?.pending}',
-                        style: const TextStyle(fontSize: 13),
-                      ),
+                      customText(text: 'Move Out  :  ${dateConvert('${outData?.moveOut}')}',textSize: 15),
                       outData?.checkedOut == 0 ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade600),
                           onPressed: (){
+
                             moveInOutController.showMoveInAlertDialog(context,outData.id,"Move Out");
                           },
-                          child: Text("Move Out")):Container()
+                          child: const Text("Move Out")):Container()
                     ],
                   ),
                 ],
@@ -380,7 +386,7 @@ class ProfileContainerState extends State<ProfileContainer> {
     );
   }
 
-   Widget customText({required String text}){
+   Widget customText({required String text,double textSize = 13}){
     return Container(
       alignment: Alignment.centerLeft,
       width: Get.width*0.44,
@@ -389,7 +395,7 @@ class ProfileContainerState extends State<ProfileContainer> {
         child: Text(text,
           maxLines: 2,
           style: TextStyle(
-              fontSize: 13, fontWeight: FontWeight.w500),
+              fontSize: textSize, fontWeight: FontWeight.w500),
         ),
       ),
     );

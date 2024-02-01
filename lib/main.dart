@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:caretaker/modules/login_screen.dart';
+import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:caretaker/utils/const/app_urls.dart';
 
 import 'package:flutter/material.dart';

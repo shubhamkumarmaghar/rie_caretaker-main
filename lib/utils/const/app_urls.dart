@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:caretaker/modules/login_screen.dart';
+import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,7 +14,7 @@ class AppUrls {
   static const String fontFamilyKanit = 'Kanit';
   static const productionUrl  = "https://api.rentiseazy.com/aa/";
   static const developmentUrl = "https://test-api.rentiseazy.com/aa/";
-  static const baseUrl = developmentUrl;
+  static const baseUrl = productionUrl;
   static const imagesRootUrl =
       "http://networkgroups.in/prisma/rentitezy/images/";
   // static const rootUrl = "http://networkgroups.in/prisma/rentitezy/";

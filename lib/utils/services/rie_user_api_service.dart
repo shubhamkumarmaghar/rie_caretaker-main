@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:caretaker/modules/login_screen.dart';
-import 'package:dio/dio.dart';
+import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 
 import '../const/app_urls.dart';
 import '../view/rie_widgets.dart';
@@ -19,8 +19,6 @@ class RIEUserApiService extends GetxController {
   final String _baseURL = AppUrls.baseUrl;
   final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
   String? registeredToken;
-  //final SharedPreferenceUtil _shared = SharedPreferenceUtil();
-
   Future<String?> _getRegisteredToken() async {
     registeredToken = GetStorage().read(Constants.token);
    // registeredToken = await _shared.getString(rms_registeredUserToken);
@@ -28,9 +26,11 @@ class RIEUserApiService extends GetxController {
   }
 
   Future<Map<String, String>> get getHeaders async {
+    final info = await PackageInfo.fromPlatform();
     return {
         'admin-auth-token':
-        (registeredToken ?? await _getRegisteredToken()).toString()
+        (registeredToken ?? await _getRegisteredToken()).toString(),
+      'app-version':  info.version.toString(),
       };
   }
 /*
@@ -277,7 +277,7 @@ class RIEUserApiService extends GetxController {
 if(error['message'] =='Session expired') {
   Get.offAll(LoginScreen());
 }
-    return {'message': 'failure '+ error['msg']};
+    return {'message': 'failure'};
   }
 
   Future<dynamic> getApiCallWithQueryParamsWithHeaders({

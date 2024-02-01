@@ -14,7 +14,7 @@ import '../../../theme/custom_theme.dart';
 import '../../../utils/const/app_urls.dart';
 import '../../../utils/const/appbar_widget.dart';
 import '../../../utils/view/rie_widgets.dart';
-import '../../login_screen.dart';
+import '../../login/login_screen.dart';
 
 import '../../move_in_out/views/move_in_out_view.dart';
 import '../../ticket/view/get_all_ticket.dart';
@@ -41,6 +41,7 @@ class MainPageState extends State<MainPage> {
   @override
   void initState()  {
     var phone = GetStorage().read(Constants.phonekey);
+    log('call sync ${GetStorage().read(Constants.callSync)}');
     if(GetStorage().read(Constants.callSync)==1){
     if( GetStorage().read(Constants.background)==false && phone != null) {
       Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);

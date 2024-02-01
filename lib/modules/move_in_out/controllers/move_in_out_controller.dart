@@ -101,7 +101,7 @@ else{
      descTextStyle: TextStyle(fontSize: 18, color: Colors.black54),
      btnOkText: "$MoveInOut",
      btnOkOnPress: () async {
-       if(MoveInOut == 'MoveIn')
+       if(MoveInOut == 'Move In')
          {
            bool a = await moveIN(bookingId: bookingId);
            if(a){
