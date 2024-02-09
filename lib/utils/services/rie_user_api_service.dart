@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:caretaker/modules/login_screen.dart';
-import 'package:dio/dio.dart';
+import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 
 import '../const/app_urls.dart';
 import '../view/rie_widgets.dart';
@@ -19,8 +19,6 @@ class RIEUserApiService extends GetxController {
   final String _baseURL = AppUrls.baseUrl;
   final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
   String? registeredToken;
-  //final SharedPreferenceUtil _shared = SharedPreferenceUtil();
-
   Future<String?> _getRegisteredToken() async {
     registeredToken = GetStorage().read(Constants.token);
    // registeredToken = await _shared.getString(rms_registeredUserToken);
@@ -28,10 +26,11 @@ class RIEUserApiService extends GetxController {
   }
 
   Future<Map<String, String>> get getHeaders async {
-
+    final info = await PackageInfo.fromPlatform();
     return {
         'admin-auth-token':
-        (registeredToken ?? await _getRegisteredToken()).toString()
+        (registeredToken ?? await _getRegisteredToken()).toString(),
+      'app-version':  info.version.toString(),
       };
   }
 /*
@@ -116,7 +115,7 @@ class RIEUserApiService extends GetxController {
   Future<dynamic>  getApiCallWithURL({
     required String endPoint,
   }) async {
-    log('URL :: $endPoint ');
+    log('URL :: $endPoint ${await getHeaders}');
     try {
       final response = await http.get(
           Uri.parse(
@@ -147,7 +146,7 @@ class RIEUserApiService extends GetxController {
         headers: fromLogin?{}:await getHeaders,
       );
       return await _response(response,
-          url: Uri.https(endPoint,).toString());
+          url: Uri.parse(endPoint,).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -207,7 +206,7 @@ class RIEUserApiService extends GetxController {
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
-          log('Logout Res ::  ' + response.body);
+          log('Logout Res ::  ${response.body}');
           return true;
         }
       }
@@ -224,7 +223,7 @@ class RIEUserApiService extends GetxController {
     log('Status Code :: ${response.statusCode} -- $url    ${response.body}');
     switch (response.statusCode) {
       case 200:
-        log('Response Data :: ' + response.body);
+        log('Response Data :: ${response.body}');
         return response.body.isNotEmpty
             ? json.decode(response.body)
             : {'message': 'failure'};
@@ -275,9 +274,10 @@ class RIEUserApiService extends GetxController {
     log(error.toString());
     RIEWidgets.getToast(
         message: error['message'] ?? 'failure', color: Color(0xffFF0000));
-    Get.offAll(LoginScreen());
-
-    return {'message': 'failure '+ error['msg']};
+if(error['message'] =='Session expired') {
+  Get.offAll(LoginScreen());
+}
+    return {'message': 'failure'};
   }
 
   Future<dynamic> getApiCallWithQueryParamsWithHeaders({

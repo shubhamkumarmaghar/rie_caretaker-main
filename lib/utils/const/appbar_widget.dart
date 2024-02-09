@@ -13,7 +13,8 @@ PreferredSizeWidget appBarWidget(
     elevation: 0,
     title: Padding(
       padding:
-          EdgeInsets.only(left: screenWidth * 0.030, top: screenHeight * 0.015),
+          EdgeInsets.only(left: screenWidth * 0.030, //top: screenHeight * 0.015
+       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

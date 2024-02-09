@@ -6,6 +6,7 @@ class CareTakerLoginModelNew {
   String? image;
   String? email;
   String? token;
+  int? callSync;
   List<dynamic>? propertyId;
 
   CareTakerLoginModelNew(
@@ -16,6 +17,7 @@ class CareTakerLoginModelNew {
         this.image,
         this.email,
         this.token,
+        this.callSync,
         this.propertyId});
 
   CareTakerLoginModelNew.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class CareTakerLoginModelNew {
     image = json['image'];
     email = json['email'];
     token = json['token'];
+    callSync = json['callSync'];
     if (json['propertyId'] != null) {
       propertyId = <dynamic>[];
       json['propertyId'].forEach((v) {
@@ -43,6 +46,7 @@ class CareTakerLoginModelNew {
     data['image'] = this.image;
     data['email'] = this.email;
     data['token'] = this.token;
+    data['callSync'] = this.callSync;
     if (this.propertyId != null) {
       data['propertyId'] = this.propertyId!.map((v) => v.toJson()).toList();
     }

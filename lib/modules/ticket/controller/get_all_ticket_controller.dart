@@ -12,7 +12,7 @@ import '../model/ticket_config_model.dart';
 class AllTicketController extends GetxController{
   TextEditingController ticketDescription = TextEditingController();
   bool isLoading = false;
-  String? selectFlat = 'Select Flat';
+  //String? selectFlat = 'Select Flat';
   final RIEUserApiService _apiService = RIEUserApiService();
   TicketListModel getAllDetails = TicketListModel();
   TicketConfigModel ticketConfigModel = TicketConfigModel();
@@ -20,9 +20,12 @@ class AllTicketController extends GetxController{
   List<String>? ticketCategoriesList;
   List<String>? ticketStatusList;
   List<Properties>? ticketPropertiesList;
+  List<Flats>? flatsList;
   Properties? selectedProperty ;
+  Flats? selectedFlats;
   String? selectedCategory ;
   String? selectedStatus ;
+
  /* Properties? selectedProperty = Properties(title: 'Select Flat',value: 0);
   String? selectedCategory ='Select Category';
   String? selectedStatus ='Select Status';*/
@@ -80,10 +83,9 @@ class AllTicketController extends GetxController{
       ticketStatusList = ticketConfigModel.data?.status??[];
     //  ticketStatusList?.forEach((element) {log('skkkkk  $element'); });
 
-
-
     //  var prop = ticketConfigModel.data?.properties??[];
      ticketPropertiesList = ticketConfigModel.data?.properties??[];
+     //flatsList = ticketConfigModel.data?.properties??[];
       //ticketPropertiesList?.add(Properties(title: 'Select Flat',value: 0));
      // ticketPropertiesList?.addAll(prop);
      // ticketPropertiesList?.forEach((element) {log('${element.value} ${element.title},'); });
@@ -99,14 +101,15 @@ class AllTicketController extends GetxController{
   }
 
   Future<int> createTicket({
-    //location="+location+"&prop_type="+prop_type+"&added_on="+added_on+"&assign_to="+assign_to+"&contact_details="+contact_details+"&lead_status=Active"+"&origin="+area;
-    required String flatId,
+    required String propertyId,
+    String flatId ='',
     required String ticketCate,
     required String ticketDesc,
     required String ticketStat,
   }) async {
     String url = AppUrls.ticket;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      "propId":propertyId,
       "unitId": flatId,
       "category": ticketCate,
       "description": ticketDesc,

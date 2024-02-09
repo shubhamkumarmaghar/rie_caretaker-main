@@ -11,13 +11,16 @@ class CustomTheme {
   static final Color skyBlue = Color(0xff639fdc); // original one
  // static final Color skyBlue = Color(0xff2596be);
  // static final Color skyBlue =Color(0xff3377fe);
-  //static final Color appTheme =Color(0xff2596be);
-  static final Color appTheme =Color(0xff295372);
-  //static final Color appTheme =Color(0xff00366F);
+  static final Color appTheme =Color(0xff0668E1);
+  static final Color appTheme1 =Color(0xff17A9FD);
+  static final Color appTheme2 =Color(0xffadb9d3);
+  static final Color appTheme4 =Color(0xffedf0f5);
   //Color(0xffFF0000);//Color(0xffe55d27);//;
-
+  static final Color appThemeContrast1 = Color(0xff1C2B33);
   static final Color white = Colors.white;
   static final Color black = Colors.black;
+  static final Color grey = Colors.grey;
+
   static final Color myFavColor = Color(0xff7AB02A);
  // static final Color darkGreen = Color(0xff226e79); //original one
   static final Color red = Color(0xfff8575e);

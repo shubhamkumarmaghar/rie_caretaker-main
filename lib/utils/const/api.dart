@@ -1,18 +1,23 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:caretaker/models/property_model_new.dart';
-import 'package:caretaker/modules/home/model/ticketModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:caretaker/models/care_taker_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../modules/ticket/model/ticketModel.dart';
+import '../services/rie_user_api_service.dart';
 import 'app_urls.dart';
 
-final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+RIEUserApiService rieUserApiService = RIEUserApiService();
+/*
+Future<CareTakerLoginModelNew> careTLogin(String phone, String password) async {
 
-Future<dynamic> careTLogin(String phone, String password) async {
-  final response = await http.post(Uri.parse(AppUrls.careTakerLogin),
+  final response = await rieUserApiService.postApiCall(endPoint: AppUrls.careTakerLogin,
+      bodyParams: {
+        "phone": phone,
+        "password": password,
+      },fromLogin: true);
+ /* await http.post(Uri.parse(AppUrls.careTakerLogin),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -20,16 +25,20 @@ Future<dynamic> careTLogin(String phone, String password) async {
         "phone": phone,
         "password": password,
       })
-  );
-  if (response.statusCode == 200) {
-    var body = jsonDecode(response.body);
-    log('login data ${body}');
-    return body;
-  } else {
-    throw Exception('Failed to load CareTaker User');
+  );*/
+
+   if(response['message']=='failure'){
+    log('Invalid Credential');
+
+  }
+  else {
+     var body = jsonDecode(response);
+     log('login data ${body}');
+     return body;
+   // throw Exception('Failed to load CareTaker User');
   }
 }
-
+*/
 Future<List<CareTakerModel>> allIssuesGet(String userId) async {
   final response = await http.get(
     Uri.parse('${AppUrls.careTaker}?userId=$userId'),

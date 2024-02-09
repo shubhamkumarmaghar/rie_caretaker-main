@@ -1,4 +1,4 @@
-package pro.network.caretaker
+package com.rentiseazy.caretaker
 
 import io.flutter.embedding.android.FlutterActivity
 

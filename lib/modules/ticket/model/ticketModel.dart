@@ -32,6 +32,8 @@ class Data {
   String? updatedOn;
   dynamic closedOn;
   int? createdBy;
+  List<FollowUps>? followUps;
+
 
   Data(
       {this.id,
@@ -45,7 +47,8 @@ class Data {
         this.createdOn,
         this.updatedOn,
         this.closedOn,
-        this.createdBy});
+        this.createdBy,
+        this.followUps});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -60,6 +63,12 @@ class Data {
     updatedOn = json['updatedOn'];
     closedOn = json['closedOn'];
     createdBy = json['createdBy'];
+    if (json['followUps'] != null) {
+      followUps = <FollowUps>[];
+      json['followUps'].forEach((v) {
+        followUps!.add(new FollowUps.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -76,6 +85,31 @@ class Data {
     data['updatedOn'] = this.updatedOn;
     data['closedOn'] = this.closedOn;
     data['createdBy'] = this.createdBy;
+    if (this.followUps != null) {
+      data['followUps'] = this.followUps!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class FollowUps {
+  String? followUp;
+  String? addedBy;
+  String? addedOn;
+
+  FollowUps({this.followUp, this.addedBy, this.addedOn});
+
+  FollowUps.fromJson(Map<String, dynamic> json) {
+    followUp = json['followUp'];
+    addedBy = json['addedBy'];
+    addedOn = json['addedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['followUp'] = this.followUp;
+    data['addedBy'] = this.addedBy;
+    data['addedOn'] = this.addedOn;
     return data;
   }
 }
