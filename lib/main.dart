@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:caretaker/modules/login/login_screen.dart';
+import 'package:caretaker/theme/custom_theme.dart';
 import 'package:caretaker/utils/const/app_urls.dart';
 
 import 'package:flutter/material.dart';
@@ -178,6 +179,9 @@ class MyApp extends StatelessWidget {
       //debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        backgroundColor: Colors.white,
+        primaryColor: CustomTheme.appTheme,
+
       ),
       home: const SplashScreenPage(),
     );

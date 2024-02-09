@@ -46,14 +46,15 @@ class _GetAllTicketsState extends State<GetAllTickets> {
         backgroundColor: CustomTheme.appTheme,
         title: const Padding(
           padding: EdgeInsets.all(10),
-          child: Text('My Tickets'),
+          child: Text('My Tickets',style: TextStyle(color: Colors.white,fontSize: 16)),
         ),
       ),
       body: GetBuilder<AllTicketController>(
         init: AllTicketController(),
         builder: (controller) {
           var dataList = controller.getAllDetails.data;
-           return controller.isLoading == false ? TicketListScreen(
+           return controller.isLoading == false ?
+           TicketListScreen(
              dataList: dataList,):
            const Center(child: CircularProgressIndicator.adaptive(),);
               }),
@@ -70,8 +71,8 @@ class _GetAllTicketsState extends State<GetAllTickets> {
            backgroundColor: CustomTheme.appTheme,
            child: Row(
              children: const [
-               FittedBox(child: Text('   Create Ticket  ')),
-               Icon(CupertinoIcons.add_circled),
+               FittedBox(child: Text('   Create Ticket  ',style: TextStyle(color: Colors.white,fontSize: 16))),
+               Icon(CupertinoIcons.add_circled,color: Colors.white,),
              ],
            ),
          ),
@@ -88,7 +89,8 @@ class TicketListScreen extends StatelessWidget {
   final List<Data>? dataList;
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return  dataList!.isNotEmpty ?
+      ListView.builder(
       itemCount: dataList?.length,
       itemBuilder: (context, index) {
         var data = dataList?[index];
@@ -221,7 +223,7 @@ class TicketListScreen extends StatelessWidget {
             ),
           ),
         );
-      },);
+      },):Center(child: Text('No Ticket Found', style: TextStyle(fontSize: 18)),);
   }
 
 

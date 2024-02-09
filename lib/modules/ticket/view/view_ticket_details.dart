@@ -58,7 +58,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
         backgroundColor: CustomTheme.appTheme,
         title: Padding(
           padding: EdgeInsets.all(10),
-          child: Text(' Ticket '),
+          child: Text(' Ticket ',style: TextStyle(color: Colors.white,fontSize: 16)),
         ),
       ),
       body: SingleChildScrollView(

@@ -35,13 +35,13 @@ class _MoveInOutViewState extends State<MoveInOutView> {
         Tab(
           child: Text(
             'Move In',
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 15,color: Colors.white),
           ),
         ),
         Tab(
           child: Text(
             'Move Out',
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 15,color: Colors.white),
           ),
         ),
 
@@ -274,7 +274,7 @@ class ProfileContainerState extends State<ProfileContainer> {
                           onPressed: ()async {
 
                             moveInOutController.showMoveInAlertDialog(context,inData.id,"Move In");
-                          }, child: Text("Move IN")):Container()
+                          }, child: Text("Move IN",style: TextStyle(color: Colors.white),)):Container()
                     ],
                   ),
                 ],
@@ -367,14 +367,14 @@ class ProfileContainerState extends State<ProfileContainer> {
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(text: 'Move Out  :  ${dateConvert('${outData?.moveOut}')}',textSize: 15),
+                      customText(text: 'Move Out  :  ${dateConvert('${outData?.moveOut}')}',textSize: 15,),
                       outData?.checkedOut == 0 ? ElevatedButton(
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade600),
                           onPressed: (){
 
                             moveInOutController.showMoveInAlertDialog(context,outData.id,"Move Out");
                           },
-                          child: const Text("Move Out")):Container()
+                          child: const Text("Move Out",style: TextStyle(color: Colors.white),)):Container()
                     ],
                   ),
                 ],
@@ -386,7 +386,7 @@ class ProfileContainerState extends State<ProfileContainer> {
     );
   }
 
-   Widget customText({required String text,double textSize = 13}){
+   Widget customText({required String text,double textSize = 13,Color color = Colors.black}){
     return Container(
       alignment: Alignment.centerLeft,
       width: Get.width*0.44,
@@ -395,7 +395,8 @@ class ProfileContainerState extends State<ProfileContainer> {
         child: Text(text,
           maxLines: 2,
           style: TextStyle(
-              fontSize: textSize, fontWeight: FontWeight.w500),
+              fontSize: textSize, fontWeight: FontWeight.w500,
+          color: color),
         ),
       ),
     );

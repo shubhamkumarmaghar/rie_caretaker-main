@@ -293,6 +293,7 @@ class MainPageState extends State<MainPage> {
   }) {
     return Drawer(
       key: _drawerKey,
+
       backgroundColor: CustomTheme.white,
       child: Container(
         height: Get.height,
