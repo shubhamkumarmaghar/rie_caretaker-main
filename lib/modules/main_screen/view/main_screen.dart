@@ -44,7 +44,8 @@ class MainPageState extends State<MainPage> {
     log('call sync ${GetStorage().read(Constants.callSync)}');
     if(GetStorage().read(Constants.callSync)==1){
     if( GetStorage().read(Constants.background)==false && phone != null) {
-      Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
+
+      Workmanager().initialize(callbackDispatcher, isInDebugMode: true,);
      // await homeController.getLastCallTimestamp();
     }
     }
@@ -157,7 +158,7 @@ class MainPageState extends State<MainPage> {
                         style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
                       Spacer(),
-                      Text('V.C ${_packageInfo.version}',
+                      Text('V.C ${_packageInfo.version} ',
                         style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
                       ),
                       const SizedBox(
@@ -212,36 +213,39 @@ class MainPageState extends State<MainPage> {
                           },
                         ),
                       ),
-                      Container(
-                        child: _gridInput(
-                          hint: 'Update call logs',
-                          icon: Image.asset(
-                            'assets/images/phone.png',
-                            height: 40, width: 40,
-                            //color: CustomTheme.appTheme,
-                          ),
-                          callBack: () async {
-                            if(GetStorage().read(Constants.callSync)==1){
-                            if(homeController.singleTap) {
-                              homeController.singleTap=false;
-                              String date = GetStorage().read(
-                                  Constants.lastCallStamp);
-                              log('xoxo :: ${date}  ${date.replaceRange(
-                                  10, 11, ' ')}');
-                              await homeController.callLogs(
-                                  lastdate: date.replaceRange(10, 11, ' '));
-                              setState(() {
+                      Visibility(
+                          visible:Platform.isAndroid,
+                        child: Container(
+                          child: _gridInput(
+                            hint: 'Update call logs',
+                            icon: Image.asset(
+                              'assets/images/phone.png',
+                              height: 40, width: 40,
+                              //color: CustomTheme.appTheme,
+                            ),
+                            callBack: () async {
+                              if(GetStorage().read(Constants.callSync)==1){
+                              if(homeController.singleTap) {
+                                homeController.singleTap=false;
+                                String date = GetStorage().read(
+                                    Constants.lastCallStamp);
+                                log('xoxo :: ${date}  ${date.replaceRange(
+                                    10, 11, ' ')}');
+                                await homeController.callLogs(
+                                    lastdate: date.replaceRange(10, 11, ' '));
+                                setState(() {
 
-                              });
+                                });
+                              }
+                              else
+                              {
+                                RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
+                              }}
+                              else{
+                                RIEWidgets.getToast(message: 'This Feature is not available for You', color: Colors.white);
+                              }
                             }
-                            else
-                            {
-                              RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
-                            }}
-                            else{
-                              RIEWidgets.getToast(message: 'This Feature is not available for You', color: Colors.white);
-                            }
-                          }
+                          ),
                         ),
                       ),
 
@@ -300,6 +304,7 @@ class MainPageState extends State<MainPage> {
         child: ListView(
           children: [
             SizedBox(height: Get.height*0.05,),
+       if(Platform.isAndroid)
        GetStorage().read(Constants.callSync)==1 ? Container(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
         height: _mainHeight * 0.06,
@@ -332,10 +337,28 @@ class MainPageState extends State<MainPage> {
                 homeController.logValue.value = true;
                 log("third logs 1");
                 await homeController.getLastCallTimestamp();
-                Workmanager().registerPeriodicTask('1', 'GetApiData',
-                    initialDelay: const Duration(seconds: 10),
+                if (Platform.isAndroid) {
+                  Workmanager().registerPeriodicTask('1', 'GetApiData',
+                      initialDelay: const Duration(seconds: 10),
+                      inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+                      existingWorkPolicy: ExistingWorkPolicy.append);
+                }
+                else{
+                  Workmanager().registerOneOffTask(
+                    "1",
+                    'GetApiData', // Ignored on iOS
+                    initialDelay: Duration(seconds: 10),
+                    constraints: Constraints(
+                      // connected or metered mark the task as requiring internet
+                      networkType: NetworkType.connected,
+                      // require external power
+                      requiresCharging: true,
+                    ),
                     inputData: {'mobile': GetStorage().read(Constants.phonekey)},
-                    existingWorkPolicy: ExistingWorkPolicy.append);
+
+                    // fully supported
+                  );
+                }
               }
 
 
@@ -344,6 +367,7 @@ class MainPageState extends State<MainPage> {
           ),
         ),
       ):Container(),
+
             getTile(
               context: context,
               leading: Icon(
@@ -509,9 +533,9 @@ class MainPageState extends State<MainPage> {
             SizedBox(
               height: _mainHeight * 0.01,
             ),
-            FittedBox(
-              child: Container(
-                width: _mainWidth*0.25,
+            Container(
+              width: _mainWidth*0.25,
+              child: FittedBox(
                 child: Text(hint,
                     maxLines: 3,
                     style: TextStyle(

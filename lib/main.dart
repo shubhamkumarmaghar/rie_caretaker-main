@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:caretaker/theme/custom_theme.dart';
@@ -24,22 +25,71 @@ Future<void> callbackDispatcher() async {
  await GetStorage.init();
   Workmanager().executeTask((taskName, inputData) async {
     // userLocation();
+
     log("first logs 1");
-  await homeController.getLastCallTimestamp();
-    if (taskName == 'GetApiData') {
-      String mobileNo= inputData != null ? inputData['mobile'] : '';
+    await homeController.getLastCallTimestamp();
+
+   // if (taskName == 'GetApiData') {
       String date;
-      if(GetStorage().read(Constants.lastCallStamp)==null){
-      date =  DateTime.now().subtract(const Duration(days: 2)).toString();
-      GetStorage().write(Constants.lastCallStamp,date);
-      log('date $date');
+      switch(taskName){
+
+        case 'GetApiData':
+        {
+          String mobileNo = inputData != null ? inputData['mobile'] : '';
+
+          if (GetStorage().read(Constants.lastCallStamp) == null) {
+            date = DateTime.now().subtract(const Duration(days: 2)).toString();
+            GetStorage().write(Constants.lastCallStamp, date);
+            log('date $date');
+          }
+          else {
+            date = GetStorage().read(Constants.lastCallStamp);
+          }
+
+          await homeController.callLogs(lastdate: date);
+          break;
+        }
+        case Workmanager.iOSBackgroundTask:
+          if (GetStorage().read(Constants.lastCallStamp) == null) {
+            date = DateTime.now().subtract(const Duration(days: 2)).toString();
+            GetStorage().write(Constants.lastCallStamp, date);
+            log('date $date');
+          }
+          else {
+            date = GetStorage().read(Constants.lastCallStamp);
+          }
+
+          await homeController.callLogs(lastdate: date);
+          break;
       }
-      else{
+     /* if(Platform.isAndroid){
+      String mobileNo = inputData != null ? inputData['mobile'] : '';
+
+      if (GetStorage().read(Constants.lastCallStamp) == null) {
+        date = DateTime.now().subtract(const Duration(days: 2)).toString();
+        GetStorage().write(Constants.lastCallStamp, date);
+        log('date $date');
+      }
+      else {
         date = GetStorage().read(Constants.lastCallStamp);
       }
 
-      await homeController.callLogs(lastdate: date );
+      await homeController.callLogs(lastdate: date);
     }
+      else{
+        Workmanager.iOSBackgroundTask;
+        if (GetStorage().read(Constants.lastCallStamp) == null) {
+          date = DateTime.now().subtract(const Duration(days: 2)).toString();
+          GetStorage().write(Constants.lastCallStamp, date);
+          log('date $date');
+        }
+        else {
+          date = GetStorage().read(Constants.lastCallStamp);
+        }
+
+        await homeController.callLogs(lastdate: date);
+      }*/
+  //}
     return Future.value(true);
   });
 }

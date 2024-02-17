@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:call_log/call_log.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,10 +31,34 @@ class HomeController extends GetxController{
       await getLastCallTimestamp();
 //    Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
       // await callbackDispatcher();
-      Workmanager().registerPeriodicTask('1', 'GetApiData',
-          initialDelay: const Duration(seconds: 10),
-          inputData: {'mobile': GetStorage().read(Constants.phonekey)},
-          existingWorkPolicy: ExistingWorkPolicy.append);
+      try {
+        if (Platform.isAndroid) {
+          Workmanager().registerPeriodicTask('1', 'GetApiData',
+              initialDelay: const Duration(seconds: 10),
+              inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+              existingWorkPolicy: ExistingWorkPolicy.append);
+        }
+        else{
+          Workmanager().registerOneOffTask(
+              "1",
+              'GetApiData', // Ignored on iOS
+              initialDelay: Duration(seconds: 10),
+              constraints: Constraints(
+                // connected or metered mark the task as requiring internet
+                networkType: NetworkType.connected,
+                // require external power
+               // requiresCharging: true,
+              ),
+              inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+
+            // fully supported
+          );
+        }
+      }
+      catch(e)
+    {
+      log("background running task $e");
+    }
     }
   }
 
