@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:workmanager/workmanager.dart';
 
 
 import '../const/app_urls.dart';
@@ -252,7 +253,11 @@ class RIEUserApiService extends GetxController {
       case 402:
         return _getErrorResponse(json.decode(response.body));
       case 403:
-        return _getErrorResponse(json.decode(response.body));
+        await Workmanager().cancelAll();
+        await GetStorage().erase();
+        Get.offAll(LoginScreen());
+        return {'message': 'failure'};
+          //_getErrorResponse(json.decode(response.body));
       case 404:
         return _getErrorResponse(json.decode(response.body));
       case 405:
@@ -270,12 +275,14 @@ class RIEUserApiService extends GetxController {
     }
   }
 
-  Map<String, dynamic> _getErrorResponse(decode) {
+  Future<Map<String, dynamic>> _getErrorResponse(decode) async {
     final error = decode as Map<String, dynamic>;
     log(error.toString());
     RIEWidgets.getToast(
         message: error['message'] ?? 'failure', color: Color(0xffFF0000));
-if(error['message'] =='Session expired') {
+if(error['message'] =='Invalid token, please login again' || error['message'] =='Invalid token,please login again') {
+  await Workmanager().cancelAll();
+  await GetStorage().erase();
   Get.offAll(LoginScreen());
 }
     return {'message': 'failure'};

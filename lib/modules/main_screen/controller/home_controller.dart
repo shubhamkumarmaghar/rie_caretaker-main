@@ -178,6 +178,7 @@ class HomeController extends GetxController{
               message: 'Something Went Wrong.',
               color: CustomTheme.errorColor);
               */
+          break;
           log('Something Went Wrong.');
         }
       };
