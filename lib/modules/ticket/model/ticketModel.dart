@@ -33,6 +33,7 @@ class Data {
   dynamic closedOn;
   int? createdBy;
   List<FollowUps>? followUps;
+  List<Proofs>? proofs;
 
 
   Data(
@@ -48,7 +49,8 @@ class Data {
         this.updatedOn,
         this.closedOn,
         this.createdBy,
-        this.followUps});
+        this.followUps,
+      this.proofs});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -69,6 +71,12 @@ class Data {
         followUps!.add(new FollowUps.fromJson(v));
       });
     }
+    if (json['proofs'] != null) {
+      proofs = <Proofs>[];
+      json['proofs'].forEach((v) {
+        proofs!.add(new Proofs.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +95,9 @@ class Data {
     data['createdBy'] = this.createdBy;
     if (this.followUps != null) {
       data['followUps'] = this.followUps!.map((v) => v.toJson()).toList();
+    }
+    if (this.proofs != null) {
+      data['proofs'] = this.proofs!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -110,6 +121,24 @@ class FollowUps {
     data['followUp'] = this.followUp;
     data['addedBy'] = this.addedBy;
     data['addedOn'] = this.addedOn;
+    return data;
+  }
+}
+class Proofs {
+  int? id;
+  String? url;
+
+  Proofs({this.id, this.url});
+
+  Proofs.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    url = json['url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['url'] = this.url;
     return data;
   }
 }

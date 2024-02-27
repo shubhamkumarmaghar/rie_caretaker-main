@@ -28,6 +28,7 @@ class AppUrls {
   static const properties = "${baseUrl}listingDetail";
   static const ticket = "${baseUrl}ticket";
   static const tickets = "${baseUrl}tickets";
+  static const ticketProof = "${baseUrl}ticketProofs";
   static const ticketsConfig = "${baseUrl}ticketConfig";
   static const uploadCallLogs = "${baseUrl}callLogs";
   static const getLastCallTimestamp = "${baseUrl}lastCall";
