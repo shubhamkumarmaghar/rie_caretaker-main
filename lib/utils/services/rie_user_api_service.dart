@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:caretaker/modules/login/login_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -156,26 +157,70 @@ class RIEUserApiService extends GetxController {
     return {'message': 'failure'};
   }
 
-  /*
-  Future<dynamic> postApiCallFormData(
-      {required String endPoint, required FormData formData}) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${formData.toString()} -- ${await getHeaders}');
+  Future<dynamic> postApiCallWithImg(
+      {required String endPoint,
+        required Map<String, String> bodyParams,
+        required File img,
+        required String imgKey
+      }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} ${await getHeaders} ');
 
     try {
-      Dio dio = Dio();
-      final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
-          options: Options(headers: await getHeaders), data: formData);
-      return response.statusCode == 200
-          ? {'msg': 'success'}
-          : {'msg': 'failure'};
+      var request = http.MultipartRequest(
+          'POST', Uri.parse(endPoint));
+      request.fields.addAll(bodyParams);
+      if (img.path.isNotEmpty) {
+        final imga = await http.MultipartFile.fromPath(
+          imgKey, img.path,);
+        request.files.add(imga);
+      }
+
+      request.headers.addAll(await getHeaders);
+      http.StreamedResponse response = await request.send();
+      return await _responseWithImg(response, url: Uri.parse(endPoint,).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
       log('Error : ${e.toString()}');
     }
-    return {'msg': 'failure'};
+    return {'message': 'failure'};
   }
-  */
+
+  Future<dynamic> putApiCallWithImg({
+    required String endPoint,
+    required Map<String, String> bodyParams,
+    required File img,
+  }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} ${await getHeaders}');
+
+    try {
+      var request = http.MultipartRequest(
+          'PUT', Uri.parse(endPoint));
+      request.fields.addAll(bodyParams);
+      if (img.path.isNotEmpty) {
+        final imga = await http.MultipartFile.fromPath(
+          'cover_photo', img.path,);
+        request.files.add(imga);
+      }
+      /*  final response = await http.post(
+        Uri.parse(endPoint),
+        body: bodyParams,
+        headers: await getHeaders,
+      );*/
+      request.headers.addAll(await getHeaders);
+      http.StreamedResponse response = await request.send();
+
+      return await _responseWithImg(response,
+          url: Uri.parse(endPoint,).toString());
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+
+
   Future<dynamic> putApiCall({
     required String endPoint,
     required Map<String, dynamic> bodyParams,
@@ -274,6 +319,62 @@ class RIEUserApiService extends GetxController {
     }
   }
 
+  dynamic _responseWithImg(http.StreamedResponse response,
+      {String? url,}) async {
+    var jsonResponse = jsonDecode(await response.stream.bytesToString());
+    log('Status Code :: ${response.statusCode} -- $url    ');
+    switch (response.statusCode) {
+      case 200:
+       // log('Response Data :: ${await response.stream.bytesToString()}');
+        return jsonResponse.isEmpty
+        ? {'message': 'failure'}:
+             jsonResponse;
+      case 400:
+        return _getErrorResponse(jsonResponse);
+      case 401:
+/*
+        //SharedPreferenceUtil shared = SharedPreferenceUtil();
+
+       // await Workmanager().cancelAll();
+
+        bool deletedAllValues = await shared.clearAll();
+
+        // Navigator.of(context!).pop();
+
+        if (deletedAllValues) {
+
+         return Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.loginPage, (route) => false);
+        } else {
+          return _getErrorResponse(json.decode(response.body));
+        }
+        */
+
+      case 402:
+        return _getErrorResponse(jsonResponse);
+      case 403:
+        await Workmanager().cancelAll();
+        await GetStorage().erase();
+        Get.offAll(LoginScreen());
+        return {'message': 'failure'};
+    //_getErrorResponse(json.decode(response.body));
+      case 404:
+        return _getErrorResponse(jsonResponse);
+      case 405:
+        return _getErrorResponse(jsonResponse);
+      case 415:
+        return _getErrorResponse(jsonResponse);
+      case 500:
+        return _getErrorResponse(jsonResponse);
+      case 501:
+        return _getErrorResponse(jsonResponse);
+      case 502:
+        return _getErrorResponse(jsonResponse);
+      default:
+        return _getErrorResponse(jsonResponse);
+    }
+  }
+
   Future<Map<String, dynamic>> _getErrorResponse(decode) async {
     final error = decode as Map<String, dynamic>;
     log(error.toString());
@@ -311,4 +412,54 @@ if(error['message'] =='Invalid token, please login again' || error['message'] ==
     }
     return {'message': 'failure'};
   }
+
+
+  // dio apis
+
+  Future<dynamic> putApiCallFormData(
+      {required String endPoint,
+        required Map<String, dynamic> bodyParams,
+        // required FormData formData
+      }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
+
+    try {
+      Dio dio = Dio();
+      final response = await dio.put(endPoint,
+          options: Options(headers: await getHeaders), data: bodyParams);
+      log(response.toString());
+      return response.statusCode == 200
+          ? {'msg': 'success'}
+          : {'msg': 'failure'};
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'msg': 'failure'};
+  }
+
+  Future<dynamic> postApiCallFormData(
+      {required String endPoint,
+        required Map<String, dynamic> bodyParams,
+        // required FormData formData
+      }) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
+
+    try {
+      Dio dio = Dio();
+      final response = await dio.post(endPoint,
+          options: Options(headers: await getHeaders), data: bodyParams);
+      log(response.toString());
+      return response.statusCode == 200
+          ? {'msg': 'success'}
+          : {'msg': 'failure'};
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'msg': 'failure'};
+  }
+
 }
