@@ -69,11 +69,13 @@ class _GetAllTicketsState extends State<GetAllTickets> {
               Get.to(const CreateTicket());
            },
            backgroundColor: CustomTheme.appTheme,
-           child: Row(
-             children: const [
-               FittedBox(child: Text('   Create Ticket  ',style: TextStyle(color: Colors.white,fontSize: 16))),
-               Icon(CupertinoIcons.add_circled,color: Colors.white,),
-             ],
+           child: FittedBox(
+             child: Row(
+               children: const [
+                 Text('   Create Ticket  ',style: TextStyle(color: Colors.white,fontSize: 16)),
+                 Icon(CupertinoIcons.add_circled,color: Colors.white,),
+               ],
+             ),
            ),
          ),
       ),

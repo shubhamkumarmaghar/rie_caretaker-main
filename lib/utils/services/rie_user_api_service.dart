@@ -31,8 +31,7 @@ class RIEUserApiService extends GetxController {
     return {
         'admin-auth-token':
         (registeredToken ?? await _getRegisteredToken()).toString(),
-      'app-version': '1.0.13'
-      //info.version.toString(),
+      'app-version': info.version.toString(),
       };
   }
 /*

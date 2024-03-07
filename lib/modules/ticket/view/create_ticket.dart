@@ -363,55 +363,57 @@ class _CreateTicketState extends State<CreateTicket> {
                 ),
               ),
               const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () async {
-                  if (controller.selectedProperty?.value == null) {
-                    RIEWidgets.getToast(
-                        message: 'Please Select Property',
-                        color: CustomTheme.white);
-                    return;
-                  }
-                  if (controller.selectedProperty?.value == null) {
-                    RIEWidgets.getToast(
-                        message: 'Please Select Category',
-                        color: CustomTheme.white);
-                    return;
-                  }
-                  if (controller.selectedProperty?.value == null) {
-                    RIEWidgets.getToast(
-                        message: 'Please Enter description about the ticket',
-                        color: CustomTheme.white);
-                    return;
-                  }
-                  if (controller.selectedCategory == null ||
-                      controller.selectedCategory == '') {
-                    RIEWidgets.getToast(
-                        message: 'Please Select tickets Status',
-                        color: CustomTheme.white);
-                    return;
-                  }
-                  await controller.createTicket(
-                    propertyId:'${controller.selectedProperty?.value.toString()}' ,
-                      flatId: '${controller.selectedFlats?.value.toString()}',
-                      ticketCate: controller.selectedCategory.toString(),
-                      ticketDesc: controller.ticketDescription.text,
-                      ticketStat: controller.selectedStatus.toString());
-                  Get.back();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: Get.width * 0.3,
-                  height: Get.height * 0.04,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.orange,
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    if (controller.selectedProperty?.value == null) {
+                      RIEWidgets.getToast(
+                          message: 'Please Select Property',
+                          color: CustomTheme.white);
+                      return;
+                    }
+                    if (controller.selectedProperty?.value == null) {
+                      RIEWidgets.getToast(
+                          message: 'Please Select Category',
+                          color: CustomTheme.white);
+                      return;
+                    }
+                    if (controller.selectedProperty?.value == null) {
+                      RIEWidgets.getToast(
+                          message: 'Please Enter description about the ticket',
+                          color: CustomTheme.white);
+                      return;
+                    }
+                    if (controller.selectedCategory == null ||
+                        controller.selectedCategory == '') {
+                      RIEWidgets.getToast(
+                          message: 'Please Select tickets Status',
+                          color: CustomTheme.white);
+                      return;
+                    }
+                    await controller.createTicket(
+                      propertyId:'${controller.selectedProperty?.value.toString()}' ,
+                        flatId: '${controller.selectedFlats?.value.toString()}',
+                        ticketCate: controller.selectedCategory.toString(),
+                        ticketDesc: controller.ticketDescription.text,
+                        ticketStat: controller.selectedStatus.toString());
+                    Get.back();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: Get.width * 0.3,
+                    height: Get.height * 0.04,
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.orange,
+                    ),
+                    child: FittedBox(
+                        child: Text(
+                      "Create Ticket",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    )),
                   ),
-                  child: FittedBox(
-                      child: Text(
-                    "Create Ticket",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  )),
                 ),
               ),
             ],

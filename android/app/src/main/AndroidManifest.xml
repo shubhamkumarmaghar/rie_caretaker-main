@@ -15,7 +15,7 @@
    <application
         android:label="RENTISEASY ADMIN"
         android:name="${applicationName}"
-        android:icon="@drawable/app_logo">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
