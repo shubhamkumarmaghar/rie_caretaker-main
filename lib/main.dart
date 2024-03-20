@@ -226,7 +226,7 @@ class MyApp extends StatelessWidget {
         return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9), child: child ?? const Text(''));
       },
       title: 'RENTISEASY ADMIN',
-      //debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         backgroundColor: Colors.white,
