@@ -193,7 +193,9 @@ void main() async{
    await GetStorage.init();
   //Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
   _portraitModeOnly();
-   await function();
+   if(Platform.isAndroid){
+     await function();
+   }
   runApp(const MyApp());
 }
 

@@ -39,19 +39,25 @@ class MainPageState extends State<MainPage> {
   HomeController homeController = Get.put(HomeController());
 
   @override
-  void initState()  {
-    var phone = GetStorage().read(Constants.phonekey);
-    log('call sync ${GetStorage().read(Constants.callSync)}');
-    if(GetStorage().read(Constants.callSync)==1){
-    if( GetStorage().read(Constants.background)==false && phone != null) {
-      Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
-     // await homeController.getLastCallTimestamp();
-    }
+  void initState() {
+    if (Platform.isAndroid) {
+      var phone = GetStorage().read(Constants.phonekey);
+      log('call sync ${GetStorage().read(Constants.callSync)}');
+      if (GetStorage().read(Constants.callSync) == 1) {
+        if (GetStorage().read(Constants.background) == false && phone != null) {
+          Workmanager().initialize(
+            callbackDispatcher,
+            isInDebugMode: false,
+          );
+          // await homeController.getLastCallTimestamp();
+        }
+      }
     }
     // fetchUserDet();
     _initPackageInfo();
     super.initState();
   }
+
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -59,12 +65,14 @@ class MainPageState extends State<MainPage> {
     buildNumber: 'Unknown',
     buildSignature: 'Unknown',
   );
+
   Future<void> _initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
     });
   }
+
   // fetchUserDet() async {
   //   var sharedPreferences = await _prefs;
   //   imageUrl = sharedPreferences.getString(Constants.profileUrl).toString();
@@ -78,10 +86,10 @@ class MainPageState extends State<MainPage> {
     PersistentTabController controller;
     controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
-     // backgroundColor: CustomTheme.errorColor,
-        appBar: appBarWidget('RENTISEASY ADMIN', '', context, false),
+      // backgroundColor: CustomTheme.errorColor,
+      appBar: appBarWidget('RENTISEASY ADMIN', '', context, false),
       bottomNavigationBar: Container(
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: CustomTheme.appTheme,
@@ -106,101 +114,105 @@ class MainPageState extends State<MainPage> {
                       child: Container(
                           height: 26,
                           width: 26,
-                          child: Icon(Icons.add_home_work_outlined,color: Colors.white,))),
+                          child: Icon(
+                            Icons.add_home_work_outlined,
+                            color: Colors.white,
+                          ))),
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 GestureDetector(
                     onTap: () {
-                      Get.to(
-                          ProfilePage()
-                         // GetAllTickets()
-                      );
+                      Get.to(ProfilePage()
+                          // GetAllTickets()
+                          );
                     },
                     child: Container(
                         height: 26,
                         width: 26,
-                        child: Icon(Icons.signpost_rounded,color: Colors.white,))),
+                        child: Icon(
+                          Icons.signpost_rounded,
+                          color: Colors.white,
+                        ))),
               ],
             ),
           ),
         ),
       ),
-        body:   WillPopScope(
-          onWillPop: () async {
-            showExitDialog(context);
-            return false;
-          },
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(bottom: 15),
-            decoration: BoxDecoration(
-            //  color: CustomTheme.errorColor,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        GetStorage().read(Constants.usernamekey).toString()??'Guest',
-                        style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
-                      ),
-                      Spacer(),
-                      Text('V.C ${_packageInfo.version}',
-                        style: TextStyle(color: CustomTheme.grey,fontWeight: FontWeight.w600,fontSize: 14),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        child: _gridInput(
+      body: WillPopScope(
+        onWillPop: () async {
+          showExitDialog(context);
+          return false;
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(bottom: 15),
+          decoration: BoxDecoration(
+              //  color: CustomTheme.errorColor,
+              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      GetStorage().read(Constants.usernamekey).toString() ?? 'Guest',
+                      style: TextStyle(color: CustomTheme.grey, fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                    Spacer(),
+                    Text(
+                      'V.C ${_packageInfo.version}',
+                      style: TextStyle(color: CustomTheme.grey, fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      child: _gridInput(
                           hint: 'My Tickets',
                           icon: Image.asset(
                             'assets/images/tickets.png',
                             height: 40,
                             width: 40,
                             color: CustomTheme.skyBlue,
-
                           ),
                           callBack: () {
                             Get.to(const GetAllTickets());
-                          }
-                        ),
-                      ),
-                      Container(
-                        child: _gridInput(
-                          hint: 'Move In/Out',
-                          icon: Image.asset(
-                            'assets/images/home-owner.png',
-                            height: 40, width: 40,color: CustomTheme.skyBlue,
+                          }),
+                    ),
+                    Container(
+                      child: _gridInput(
+                        hint: 'Move In/Out',
+                        icon: Image.asset(
+                          'assets/images/home-owner.png',
+                          height: 40, width: 40, color: CustomTheme.skyBlue,
 
-                            //color: CustomTheme.appTheme,
-                          ),
-                          callBack: () {
-                            Get.to(const MoveInOutView());
+                          //color: CustomTheme.appTheme,
+                        ),
+                        callBack: () {
+                          Get.to(const MoveInOutView());
 
                           //  showSearchBookingDialog(context);
 
-                            /*  Navigator.pop(context);
+                          /*  Navigator.pop(context);
               Navigator.pushNamed(
               context,
               AppRoutes.searchBookingListPage,
@@ -209,50 +221,44 @@ class MainPageState extends State<MainPage> {
               'mobileNo': '',
               },
               ); */
-                          },
-                        ),
+                        },
                       ),
-                      Container(
-                        child: _gridInput(
-                          hint: 'Sync call',
-                          icon: Image.asset(
-                            'assets/images/phone.png',
-                            height: 40, width: 40,
-                            //color: CustomTheme.appTheme,
-                          ),
-                          callBack: () async {
-                            if(GetStorage().read(Constants.callSync)==1){
-                            if(homeController.singleTap) {
-                              homeController.singleTap=false;
-                              String date = GetStorage().read(
-                                  Constants.lastCallStamp);
-                              log('xoxo :: ${date}  ${date.replaceRange(
-                                  10, 11, ' ')}');
-                              await homeController.callLogs(
-                                  lastdate: date.replaceRange(10, 11, ' '));
-                              setState(() {
-
-                              });
-                            }
-                            else
-                            {
-                              RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
-                            }}
-                            else{
-                              RIEWidgets.getToast(message: 'This Feature is not available for You', color: Colors.white);
-                            }
-                          }
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    Platform.isAndroid
+                        ? Container(
+                            child: _gridInput(
+                                hint: 'Sync call',
+                                icon: Image.asset(
+                                  'assets/images/phone.png',
+                                  height: 40, width: 40,
+                                  //color: CustomTheme.appTheme,
+                                ),
+                                callBack: () async {
+                                  if (GetStorage().read(Constants.callSync) == 1) {
+                                    if (homeController.singleTap) {
+                                      homeController.singleTap = false;
+                                      String date = GetStorage().read(Constants.lastCallStamp);
+                                      log('xoxo :: ${date}  ${date.replaceRange(10, 11, ' ')}');
+                                      await homeController.callLogs(lastdate: date.replaceRange(10, 11, ' '));
+                                      setState(() {});
+                                    } else {
+                                      RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
+                                    }
+                                  } else {
+                                    RIEWidgets.getToast(
+                                        message: 'This Feature is not available for You', color: Colors.white);
+                                  }
+                                }),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
-       /* PersistentTabView(
+      ),
+      /* PersistentTabView(
           context,
           controller: controller,
           screens: _buildScreens(context),
@@ -293,57 +299,56 @@ class MainPageState extends State<MainPage> {
   }) {
     return Drawer(
       key: _drawerKey,
-
       backgroundColor: CustomTheme.white,
       child: Container(
         height: Get.height,
         child: ListView(
           children: [
-            SizedBox(height: Get.height*0.05,),
-       GetStorage().read(Constants.callSync)==1 ? Container(
-        margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
-        height: _mainHeight * 0.06,
-        child: ListTile(
-          leading: Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                  color: CustomTheme.appTheme.withAlpha(20),
-                  borderRadius: BorderRadius.circular(5)),
-              child: Icon(
-                Icons.call,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),),
-          title: Text(
-            'Call logs',
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-          trailing:Obx(
-                ()=> CupertinoSwitch(value: homeController.logValue.value, onChanged: (value) async {
-              if(homeController.logValue.value)
-              {
-                homeController.logValue.value = false;
-
-                Workmanager().cancelAll();
-              }
-              else{
-                homeController.logValue.value = true;
-                log("third logs 1");
-                await homeController.getLastCallTimestamp();
-                Workmanager().registerPeriodicTask('1', 'GetApiData',
-                    initialDelay: const Duration(seconds: 10),
-                    inputData: {'mobile': GetStorage().read(Constants.phonekey)},
-                    existingWorkPolicy: ExistingWorkPolicy.append);
-              }
-
-
-            }
+            SizedBox(
+              height: Get.height * 0.05,
             ),
-          ),
-        ),
-      ):Container(),
+            GetStorage().read(Constants.callSync) == 1
+                ? Container(
+                    margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
+                    height: _mainHeight * 0.06,
+                    child: ListTile(
+                      leading: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            color: CustomTheme.appTheme.withAlpha(20), borderRadius: BorderRadius.circular(5)),
+                        child: Icon(
+                          Icons.call,
+                          color: CustomTheme.appTheme,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        'Call logs',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+                      ),
+                      trailing: Obx(
+                        () => CupertinoSwitch(
+                            value: homeController.logValue.value,
+                            onChanged: (value) async {
+                              if (homeController.logValue.value) {
+                                homeController.logValue.value = false;
+
+                                Workmanager().cancelAll();
+                              } else {
+                                homeController.logValue.value = true;
+                                log("third logs 1");
+                                await homeController.getLastCallTimestamp();
+                                Workmanager().registerPeriodicTask('1', 'GetApiData',
+                                    initialDelay: const Duration(seconds: 10),
+                                    inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+                                    existingWorkPolicy: ExistingWorkPolicy.append);
+                              }
+                            }),
+                      ),
+                    ),
+                  )
+                : Container(),
             getTile(
               context: context,
               leading: Icon(
@@ -352,12 +357,11 @@ class MainPageState extends State<MainPage> {
                 size: 20,
               ),
               title: 'Profile',
-              onTap: ()
-              {
+              onTap: () {
                 Get.to(ProfilePage());
               },
             ),
-              getTile(
+            getTile(
               context: context,
               leading: Icon(
                 Icons.clear_all_rounded,
@@ -365,12 +369,10 @@ class MainPageState extends State<MainPage> {
                 size: 20,
               ),
               title: 'My Tickets',
-              onTap: ()
-               {
-                 Get.to(GetAllTickets());
+              onTap: () {
+                Get.to(GetAllTickets());
               },
             ),
-
             getTile(
               context: context,
               leading: Icon(
@@ -380,8 +382,7 @@ class MainPageState extends State<MainPage> {
               ),
               title: 'Logout',
               onTap: () async {
-                RIEWidgets.showLoaderDialog(
-                    context: context, message: 'Logging out...');
+                RIEWidgets.showLoaderDialog(context: context, message: 'Logging out...');
                 //SharedPreferenceUtil shared = SharedPreferenceUtil();
                 //await Workmanager().cancelAll();
                 //bool deletedAllValues = await shared.clearAll();
@@ -405,8 +406,7 @@ class MainPageState extends State<MainPage> {
 
   Future showExitDialog(BuildContext context) async {
     AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
         height: _mainHeight * 0.1,
         child: Column(
@@ -414,10 +414,7 @@ class MainPageState extends State<MainPage> {
           children: [
             Text(
               'Are you sure to exit the app ?',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Colors.black),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black),
             ),
             SizedBox(
               height: _mainHeight * 0.025,
@@ -430,20 +427,14 @@ class MainPageState extends State<MainPage> {
                   height: _mainHeight * 0.035,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.grey),
-                        shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                         )),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       'No',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.white),
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white),
                     ),
                   ),
                 ),
@@ -452,20 +443,14 @@ class MainPageState extends State<MainPage> {
                   height: _mainHeight * 0.035,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            CustomTheme.appTheme),
-                        shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
+                        backgroundColor: MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                         )),
                     onPressed: () => exit(0),
                     child: Text(
                       'Yes',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.white),
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white),
                     ),
                   ),
                 ),
@@ -484,9 +469,7 @@ class MainPageState extends State<MainPage> {
     );
   }
 
-
-  Widget _gridInput(
-      {required String hint, required Image icon, required Function callBack}) {
+  Widget _gridInput({required String hint, required Image icon, required Function callBack}) {
     return GestureDetector(
       onTap: () => callBack(),
       child: Container(
@@ -511,7 +494,7 @@ class MainPageState extends State<MainPage> {
             ),
             FittedBox(
               child: Container(
-                width: _mainWidth*0.25,
+                width: _mainWidth * 0.25,
                 child: Text(hint,
                     maxLines: 3,
                     style: TextStyle(
@@ -530,12 +513,8 @@ class MainPageState extends State<MainPage> {
   }
 
   Widget getTile(
-      {required BuildContext context,
-        required Icon leading,
-        required String title,
-        required Function onTap}) {
-    return
-      Container(
+      {required BuildContext context, required Icon leading, required String title, required Function onTap}) {
+    return Container(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
 
       /*decoration: BoxDecoration(
@@ -550,14 +529,12 @@ class MainPageState extends State<MainPage> {
         leading: Container(
             height: 40,
             width: 40,
-            decoration: BoxDecoration(
-                color: CustomTheme.appTheme.withAlpha(20),
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: CustomTheme.appTheme.withAlpha(20), borderRadius: BorderRadius.circular(5)),
             child: leading),
         title: Text(
           title,
-          style: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
         ),
         onTap: () => onTap(),
         trailing: Icon(
@@ -568,5 +545,3 @@ class MainPageState extends State<MainPage> {
     );
   }
 }
-
-
