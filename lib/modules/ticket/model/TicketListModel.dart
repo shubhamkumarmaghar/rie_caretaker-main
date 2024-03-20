@@ -36,6 +36,7 @@ class Data {
   dynamic closedOn;
   String? updatedOn;
   String? addedBy;
+  String? priority;
 
   Data(
       {this.id,
@@ -62,6 +63,7 @@ class Data {
     closedOn = json['closedOn'];
     updatedOn = json['updatedOn'];
     addedBy = json['addedBy'];
+    priority = json['priority'];
   }
 
   Map<String, dynamic> toJson() {
@@ -77,6 +79,7 @@ class Data {
     data['closedOn'] = closedOn;
     data['updatedOn'] = updatedOn;
     data['addedBy'] = addedBy;
+    data['priority'] = priority;
     return data;
   }
 }
