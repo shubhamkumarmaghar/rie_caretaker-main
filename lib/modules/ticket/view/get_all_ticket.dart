@@ -122,11 +122,25 @@ class TicketListScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Ticket Id : ${data?.id} ',
-                      style:
-                      TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Ticket Id : ${data?.id} ',
+                            style:
+                            TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                          ),
+                          Text(
+                            'Priority : ${data?.priority.toString().capitalizeFirst}',
+                            style:
+                            TextStyle(fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              color:
+                              '${data?.priority}' == 'high' ? Colors.red : '${data?.priority}' == 'medium' ? Colors.blue : Colors.green
+                            ),
+                          ),
+                        ]
+
+          ),
                     SizedBox(
                       height: 5,
                     ),

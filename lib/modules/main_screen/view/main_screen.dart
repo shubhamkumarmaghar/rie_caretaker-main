@@ -85,7 +85,7 @@ class MainPageState extends State<MainPage> {
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: CustomTheme.appTheme,
-              blurRadius: 10,
+              //blurRadius: 10,
             ),
           ],
         ),
@@ -173,7 +173,7 @@ class MainPageState extends State<MainPage> {
                     children: [
                       Container(
                         child: _gridInput(
-                          hint: 'Show Tickets',
+                          hint: 'My Tickets',
                           icon: Image.asset(
                             'assets/images/tickets.png',
                             height: 40,
@@ -214,7 +214,7 @@ class MainPageState extends State<MainPage> {
                       ),
                       Container(
                         child: _gridInput(
-                          hint: 'Update call logs',
+                          hint: 'Sync call',
                           icon: Image.asset(
                             'assets/images/phone.png',
                             height: 40, width: 40,
@@ -364,7 +364,7 @@ class MainPageState extends State<MainPage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'Get All Tickets',
+              title: 'My Tickets',
               onTap: ()
                {
                  Get.to(GetAllTickets());
