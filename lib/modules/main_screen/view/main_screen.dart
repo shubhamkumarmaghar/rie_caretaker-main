@@ -224,7 +224,8 @@ class MainPageState extends State<MainPage> {
                             if(GetStorage().read(Constants.callSync)==1){
                             if(homeController.singleTap) {
                               homeController.singleTap=false;
-                              String date = GetStorage().read(
+                             await homeController.getLastCallTimestamp();
+                              String date = await GetStorage().read(
                                   Constants.lastCallStamp);
                               log('xoxo :: ${date}  ${date.replaceRange(
                                   10, 11, ' ')}');
@@ -300,7 +301,7 @@ class MainPageState extends State<MainPage> {
         child: ListView(
           children: [
             SizedBox(height: Get.height*0.05,),
-       GetStorage().read(Constants.callSync)==1 ? Container(
+     /*  GetStorage().read(Constants.callSync)==1 ? Container(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
         height: _mainHeight * 0.06,
         child: ListTile(
@@ -343,7 +344,7 @@ class MainPageState extends State<MainPage> {
             ),
           ),
         ),
-      ):Container(),
+      ):Container(),*/
             getTile(
               context: context,
               leading: Icon(
