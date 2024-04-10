@@ -12,29 +12,28 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:workmanager/workmanager.dart';
 
-
 import '../const/app_urls.dart';
 import '../view/rie_widgets.dart';
-
 
 class RIEUserApiService extends GetxController {
   final String _baseURL = AppUrls.baseUrl;
   final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
   String? registeredToken;
+
   Future<String?> _getRegisteredToken() async {
     registeredToken = GetStorage().read(Constants.token);
-   // registeredToken = await _shared.getString(rms_registeredUserToken);
+    // registeredToken = await _shared.getString(rms_registeredUserToken);
     return registeredToken;
   }
 
   Future<Map<String, String>> get getHeaders async {
     final info = await PackageInfo.fromPlatform();
     return {
-        'admin-auth-token':
-        (registeredToken ?? await _getRegisteredToken()).toString(),
+      'admin-auth-token': (registeredToken ?? await _getRegisteredToken()).toString(),
       'app-version': info.version.toString(),
-      };
+    };
   }
+
 /*
   Future downloadFile({required String url, required String fileName}) async {
     Directory appStorage = await getApplicationDocumentsDirectory();
@@ -77,14 +76,12 @@ class RIEUserApiService extends GetxController {
   }) async {
     log('URL :: $endPoint  -- ${await getHeaders}');
     try {
-      final response = await http.get(Uri.https(_baseURL, endPoint),
-          headers: await getHeaders);
+      final response = await http.get(Uri.https(_baseURL, endPoint), headers: await getHeaders);
 
-  return await _response(response,
-      url: Uri.https(_baseURL, endPoint).toString(),);
-
-
-
+      return await _response(
+        response,
+        url: Uri.https(_baseURL, endPoint).toString(),
+      );
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -100,12 +97,11 @@ class RIEUserApiService extends GetxController {
     log('URL :: $endPoint ---- QueryParams :: ${queryParams.toString()} -- ${await getHeaders} ');
     try {
       final response = await http.get(
-          Uri.https( endPoint,'/aa/ticket?', queryParams),
-          headers: await getHeaders,
-          );
+        Uri.https(endPoint, '/aa/ticket?', queryParams),
+        headers: await getHeaders,
+      );
 
-      return await _response(response,
-          url: Uri.https( endPoint).toString());
+      return await _response(response, url: Uri.https(endPoint).toString());
     } on SocketException {
       log('Socket Exception Happened');
     } catch (e) {
@@ -114,7 +110,7 @@ class RIEUserApiService extends GetxController {
     return {'message': 'failure'};
   }
 
-  Future<dynamic>  getApiCallWithURL({
+  Future<dynamic> getApiCallWithURL({
     required String endPoint,
   }) async {
     log('URL :: $endPoint ${await getHeaders}');
@@ -124,8 +120,10 @@ class RIEUserApiService extends GetxController {
             endPoint,
           ),
           headers: await getHeaders);
-      return await _response(response,
-          url: Uri.parse(endPoint).toString(),);
+      return await _response(
+        response,
+        url: Uri.parse(endPoint).toString(),
+      );
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -134,21 +132,23 @@ class RIEUserApiService extends GetxController {
     return {'message': 'failure'};
   }
 
-  Future<dynamic> postApiCall(
-      {required String endPoint,
-      required Map<String, dynamic> bodyParams,
-        bool fromLogin=false,
-      }) async {
-    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin?'':await getHeaders}');
+  Future<dynamic> postApiCall({
+    required String endPoint,
+    required Map<String, dynamic> bodyParams,
+    bool fromLogin = false,
+  }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin ? '' : await getHeaders}');
 
     try {
       final response = await http.post(
         Uri.parse(endPoint),
         body: bodyParams,
-        headers: fromLogin?{}:await getHeaders,
+        headers: fromLogin ? {} : await getHeaders,
       );
       return await _response(response,
-          url: Uri.parse(endPoint,).toString());
+          url: Uri.parse(
+            endPoint,
+          ).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -159,25 +159,28 @@ class RIEUserApiService extends GetxController {
 
   Future<dynamic> postApiCallWithImg(
       {required String endPoint,
-        required Map<String, String> bodyParams,
-        required File img,
-        required String imgKey
-      }) async {
+      required Map<String, String> bodyParams,
+      required File img,
+      required String imgKey}) async {
     log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} ${await getHeaders} ');
 
     try {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse(endPoint));
+      var request = http.MultipartRequest('POST', Uri.parse(endPoint));
       request.fields.addAll(bodyParams);
       if (img.path.isNotEmpty) {
         final imga = await http.MultipartFile.fromPath(
-          imgKey, img.path,);
+          imgKey,
+          img.path,
+        );
         request.files.add(imga);
       }
 
       request.headers.addAll(await getHeaders);
       http.StreamedResponse response = await request.send();
-      return await _responseWithImg(response, url: Uri.parse(endPoint,).toString());
+      return await _responseWithImg(response,
+          url: Uri.parse(
+            endPoint,
+          ).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -194,12 +197,13 @@ class RIEUserApiService extends GetxController {
     log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} ${await getHeaders}');
 
     try {
-      var request = http.MultipartRequest(
-          'PUT', Uri.parse(endPoint));
+      var request = http.MultipartRequest('PUT', Uri.parse(endPoint));
       request.fields.addAll(bodyParams);
       if (img.path.isNotEmpty) {
         final imga = await http.MultipartFile.fromPath(
-          'cover_photo', img.path,);
+          'cover_photo',
+          img.path,
+        );
         request.files.add(imga);
       }
       /*  final response = await http.post(
@@ -211,7 +215,9 @@ class RIEUserApiService extends GetxController {
       http.StreamedResponse response = await request.send();
 
       return await _responseWithImg(response,
-          url: Uri.parse(endPoint,).toString());
+          url: Uri.parse(
+            endPoint,
+          ).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -219,7 +225,6 @@ class RIEUserApiService extends GetxController {
     }
     return {'message': 'failure'};
   }
-
 
   Future<dynamic> putApiCall({
     required String endPoint,
@@ -233,8 +238,10 @@ class RIEUserApiService extends GetxController {
         body: bodyParams,
       );
 
-      return await _response(response,
-          url: Uri.parse(endPoint).toString(),);
+      return await _response(
+        response,
+        url: Uri.parse(endPoint).toString(),
+      );
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -264,15 +271,15 @@ class RIEUserApiService extends GetxController {
     return {'message': 'failure'};
   }
 
-  dynamic _response(http.Response response,
-      {String? url,}) async {
+  dynamic _response(
+    http.Response response, {
+    String? url,
+  }) async {
     log('Status Code :: ${response.statusCode} -- $url    ${response.body}');
     switch (response.statusCode) {
       case 200:
         log('Response Data :: ${response.body}');
-        return response.body.isNotEmpty
-            ? json.decode(response.body)
-            : {'message': 'failure'};
+        return response.body.isNotEmpty ? json.decode(response.body) : {'message': 'failure'};
       case 400:
         return _getErrorResponse(json.decode(response.body));
       case 401:
@@ -301,7 +308,7 @@ class RIEUserApiService extends GetxController {
         await GetStorage().erase();
         Get.offAll(LoginScreen());
         return {'message': 'failure'};
-          //_getErrorResponse(json.decode(response.body));
+      //_getErrorResponse(json.decode(response.body));
       case 404:
         return _getErrorResponse(json.decode(response.body));
       case 405:
@@ -319,16 +326,16 @@ class RIEUserApiService extends GetxController {
     }
   }
 
-  dynamic _responseWithImg(http.StreamedResponse response,
-      {String? url,}) async {
+  dynamic _responseWithImg(
+    http.StreamedResponse response, {
+    String? url,
+  }) async {
     var jsonResponse = jsonDecode(await response.stream.bytesToString());
     log('Status Code :: ${response.statusCode} -- $url    ');
     switch (response.statusCode) {
       case 200:
-       // log('Response Data :: ${await response.stream.bytesToString()}');
-        return jsonResponse.isEmpty
-        ? {'message': 'failure'}:
-             jsonResponse;
+        // log('Response Data :: ${await response.stream.bytesToString()}');
+        return jsonResponse.isEmpty ? {'message': 'failure'} : jsonResponse;
       case 400:
         return _getErrorResponse(jsonResponse);
       case 401:
@@ -357,7 +364,7 @@ class RIEUserApiService extends GetxController {
         await GetStorage().erase();
         Get.offAll(LoginScreen());
         return {'message': 'failure'};
-    //_getErrorResponse(json.decode(response.body));
+      //_getErrorResponse(json.decode(response.body));
       case 404:
         return _getErrorResponse(jsonResponse);
       case 405:
@@ -378,33 +385,28 @@ class RIEUserApiService extends GetxController {
   Future<Map<String, dynamic>> _getErrorResponse(decode) async {
     final error = decode as Map<String, dynamic>;
     log(error.toString());
-    RIEWidgets.getToast(
-        message: error['message'] ?? 'failure', color: Color(0xffFF0000));
-if(error['message'] =='Invalid token, please login again' || error['message'] =='Invalid token,please login again') {
-  await Workmanager().cancelAll();
-  await GetStorage().erase();
-  Get.offAll(LoginScreen());
-}
+    RIEWidgets.getToast(message: error['message'] ?? 'failure', color: Color(0xffFF0000));
+    if (error['message'] == 'Invalid token, please login again' ||
+        error['message'] == 'Invalid token,please login again') {
+      await Workmanager().cancelAll();
+      await GetStorage().erase();
+      Get.offAll(LoginScreen());
+    }
     return {'message': 'failure'};
   }
 
-  Future<dynamic> getApiCallWithQueryParamsWithHeaders({
-    required String endPoint,
-    required Map<String, dynamic> queryParams,
-    required Map<String, String> headers,
-    bool fromLogin=false,
-    required BuildContext context
-  }) async {
-
+  Future<dynamic> getApiCallWithQueryParamsWithHeaders(
+      {required String endPoint,
+      required Map<String, dynamic> queryParams,
+      required Map<String, String> headers,
+      bool fromLogin = false,
+      required BuildContext context}) async {
     log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- Auth(header) ---${headers} ');
 
     try {
-      final response = await http.get(
-          Uri.https(_baseURL, endPoint, queryParams),
-          headers: headers);
+      final response = await http.get(Uri.https(_baseURL, endPoint, queryParams), headers: headers);
 
-      return await _response(response,
-          url: Uri.https(_baseURL, endPoint).toString());
+      return await _response(response, url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -413,24 +415,20 @@ if(error['message'] =='Invalid token, please login again' || error['message'] ==
     return {'message': 'failure'};
   }
 
-
   // dio apis
 
-  Future<dynamic> putApiCallFormData(
-      {required String endPoint,
-        required Map<String, dynamic> bodyParams,
-        // required FormData formData
-      }) async {
+  Future<dynamic> putApiCallFormData({
+    required String endPoint,
+    required Map<String, dynamic> bodyParams,
+    // required FormData formData
+  }) async {
     log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
 
     try {
       Dio dio = Dio();
-      final response = await dio.put(endPoint,
-          options: Options(headers: await getHeaders), data: bodyParams);
+      final response = await dio.put(endPoint, options: Options(headers: await getHeaders), data: bodyParams);
       log(response.toString());
-      return response.statusCode == 200
-          ? {'msg': 'success'}
-          : {'msg': 'failure'};
+      return response.statusCode == 200 ? {'msg': 'success'} : {'msg': 'failure'};
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -439,21 +437,18 @@ if(error['message'] =='Invalid token, please login again' || error['message'] ==
     return {'msg': 'failure'};
   }
 
-  Future<dynamic> postApiCallFormData(
-      {required String endPoint,
-        required Map<String, dynamic> bodyParams,
-        // required FormData formData
-      }) async {
+  Future<dynamic> postApiCallFormData({
+    required String endPoint,
+    required Map<String, dynamic> bodyParams,
+    // required FormData formData
+  }) async {
     log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
 
     try {
       Dio dio = Dio();
-      final response = await dio.post(endPoint,
-          options: Options(headers: await getHeaders), data: bodyParams);
+      final response = await dio.post(endPoint, options: Options(headers: await getHeaders), data: bodyParams);
       log(response.toString());
-      return response.statusCode == 200
-          ? {'msg': 'success'}
-          : {'msg': 'failure'};
+      return response.statusCode == 200 ? {'msg': 'success'} : {'msg': 'failure'};
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -461,5 +456,4 @@ if(error['message'] =='Invalid token, please login again' || error['message'] ==
     }
     return {'msg': 'failure'};
   }
-
 }

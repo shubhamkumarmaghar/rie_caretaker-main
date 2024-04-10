@@ -154,36 +154,19 @@ class HomeController extends GetxController {
           'duration': callduration.toString(),
         });
         final data = response as Map<String, dynamic>;
-        if (data['message'].toString().toLowerCase().contains('success')) {
-          log('Success data went to server');
+        if (!data['message'].toString().toLowerCase().contains('failure')) {
           String callLast = calldate[0].replaceRange(10, 11, ' ');
           GetStorage().write(Constants.lastCallStamp, callLast);
           RIEWidgets.getToast(message: '${currentlogs[i].number} updated to the server', color: CustomTheme.white);
-          /*   RMSWidgets.showSnackbar(
-              context: context,
-              message: 'success',
-              color: CustomTheme.appTheme);*/
         } else {
           RIEWidgets.getToast(message: 'Something Went Wrong.', color: CustomTheme.white);
-          /*\
-          RIEWidgets.showSnackbar(
-              context: context,
-              message: 'Something Went Wrong.',
-              color: CustomTheme.errorColor);
-              */
-          break;
-          log('Something Went Wrong.');
         }
       }
       ;
       currentlogs.clear();
     } else {
       log('call log alreday updated');
-      RIEWidgets.getToast(message: 'call log alreday updated', color: CustomTheme.white);
-      /*  RMSWidgets.showSnackbar(
-          context: context,
-          message: "Already Updated",
-          color: CustomTheme.myFavColor); */
+      RIEWidgets.getToast(message: 'call log already updated', color: CustomTheme.white);
     }
     singleTap = true;
   }
