@@ -21,9 +21,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-   if(Platform.isAndroid){
-     getdata();
-   }
+    if (Platform.isAndroid) {
+      getdata();
+    }
     super.onInit();
   }
 

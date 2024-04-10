@@ -221,44 +221,56 @@ class MainPageState extends State<MainPage> {
               'mobileNo': '',
               },
               ); */
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                    Platform.isAndroid
-                        ? Container(
-                            child: _gridInput(
-                                hint: 'Sync call',
-                                icon: Image.asset(
-                                  'assets/images/phone.png',
-                                  height: 40, width: 40,
-                                  //color: CustomTheme.appTheme,
-                                ),
-                                callBack: () async {
-                                  if (GetStorage().read(Constants.callSync) == 1) {
-                                    if (homeController.singleTap) {
-                                      homeController.singleTap = false;
-                                      String date = GetStorage().read(Constants.lastCallStamp);
-                                      log('xoxo :: ${date}  ${date.replaceRange(10, 11, ' ')}');
-                                      await homeController.callLogs(lastdate: date.replaceRange(10, 11, ' '));
-                                      setState(() {});
-                                    } else {
-                                      RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
-                                    }
-                                  } else {
-                                    RIEWidgets.getToast(
-                                        message: 'This Feature is not available for You', color: Colors.white);
-                                  }
-                                }),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              ],
+                   Platform.isAndroid?  Container(
+                        child: _gridInput(
+                          hint: 'Sync call',
+                          icon: Image.asset(
+                            'assets/images/phone.png',
+                            height: 40, width: 40,
+                            //color: CustomTheme.appTheme,
+                          ),
+                          callBack: () async {
+                            if(GetStorage().read(Constants.callSync)==1){
+                            if(homeController.singleTap) {
+                              homeController.singleTap=false;
+                             await homeController.getLastCallTimestamp();
+                              String date = await GetStorage().read(
+                                  Constants.lastCallStamp);
+                              log('xoxo :: ${date}  ${date.replaceRange(
+                                  10, 11, ' ')}');
+                              await homeController.callLogs(
+                                  lastdate: date.replaceRange(10, 11, ' '));
+                              setState(() {
+
+                              });
+                            }
+                            else
+                            {
+                              RIEWidgets.getToast(message: 'Already in process', color: Colors.white);
+                            }}
+                            else{
+                              RIEWidgets.getToast(message: 'This Feature is not available for You', color: Colors.white);
+                            }
+                          }
+                        ),
+                      ):SizedBox.shrink(),
+/*
+* "notification": {
+        "title": "this is title",
+        "body": "this is subtitle"
+    },*/
+                  //  dDcvyjM-QuCVxu6RPkq1-E:APA91bF8M6PGSmrZ4s1nz44ZxeJA29XMYeHNbkI5R8vPwd-SKg4MCUjpnbqV0tpU4HNiWoA5m9pSUIny6WMg4vrPvVXWSP65l1p6sBExhmAuDnEKtb90A4hum6n1R6yqDD21Y-kTzndj
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      /* PersistentTabView(
+       /* PersistentTabView(
           context,
           controller: controller,
           screens: _buildScreens(context),
@@ -299,56 +311,57 @@ class MainPageState extends State<MainPage> {
   }) {
     return Drawer(
       key: _drawerKey,
+
       backgroundColor: CustomTheme.white,
       child: Container(
         height: Get.height,
         child: ListView(
           children: [
-            SizedBox(
-              height: Get.height * 0.05,
-            ),
-            GetStorage().read(Constants.callSync) == 1
-                ? Container(
-                    margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
-                    height: _mainHeight * 0.06,
-                    child: ListTile(
-                      leading: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            color: CustomTheme.appTheme.withAlpha(20), borderRadius: BorderRadius.circular(5)),
-                        child: Icon(
-                          Icons.call,
-                          color: CustomTheme.appTheme,
-                          size: 20,
-                        ),
-                      ),
-                      title: Text(
-                        'Call logs',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-                      ),
-                      trailing: Obx(
-                        () => CupertinoSwitch(
-                            value: homeController.logValue.value,
-                            onChanged: (value) async {
-                              if (homeController.logValue.value) {
-                                homeController.logValue.value = false;
+            SizedBox(height: Get.height*0.05,),
+     /*  GetStorage().read(Constants.callSync)==1 ? Container(
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
+        height: _mainHeight * 0.06,
+        child: ListTile(
+          leading: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  color: CustomTheme.appTheme.withAlpha(20),
+                  borderRadius: BorderRadius.circular(5)),
+              child: Icon(
+                Icons.call,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),),
+          title: Text(
+            'Call logs',
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+          trailing:Obx(
+                ()=> CupertinoSwitch(value: homeController.logValue.value, onChanged: (value) async {
+              if(homeController.logValue.value)
+              {
+                homeController.logValue.value = false;
 
-                                Workmanager().cancelAll();
-                              } else {
-                                homeController.logValue.value = true;
-                                log("third logs 1");
-                                await homeController.getLastCallTimestamp();
-                                Workmanager().registerPeriodicTask('1', 'GetApiData',
-                                    initialDelay: const Duration(seconds: 10),
-                                    inputData: {'mobile': GetStorage().read(Constants.phonekey)},
-                                    existingWorkPolicy: ExistingWorkPolicy.append);
-                              }
-                            }),
-                      ),
-                    ),
-                  )
-                : Container(),
+                Workmanager().cancelAll();
+              }
+              else{
+                homeController.logValue.value = true;
+                log("third logs 1");
+                await homeController.getLastCallTimestamp();
+                Workmanager().registerPeriodicTask('1', 'GetApiData',
+                    initialDelay: const Duration(seconds: 10),
+                    inputData: {'mobile': GetStorage().read(Constants.phonekey)},
+                    existingWorkPolicy: ExistingWorkPolicy.append);
+              }
+
+
+            }
+            ),
+          ),
+        ),
+      ):Container(),*/
             getTile(
               context: context,
               leading: Icon(
@@ -357,11 +370,12 @@ class MainPageState extends State<MainPage> {
                 size: 20,
               ),
               title: 'Profile',
-              onTap: () {
+              onTap: ()
+              {
                 Get.to(ProfilePage());
               },
             ),
-            getTile(
+              getTile(
               context: context,
               leading: Icon(
                 Icons.clear_all_rounded,
@@ -369,10 +383,12 @@ class MainPageState extends State<MainPage> {
                 size: 20,
               ),
               title: 'My Tickets',
-              onTap: () {
-                Get.to(GetAllTickets());
+              onTap: ()
+               {
+                 Get.to(GetAllTickets());
               },
             ),
+
             getTile(
               context: context,
               leading: Icon(
@@ -382,7 +398,8 @@ class MainPageState extends State<MainPage> {
               ),
               title: 'Logout',
               onTap: () async {
-                RIEWidgets.showLoaderDialog(context: context, message: 'Logging out...');
+                RIEWidgets.showLoaderDialog(
+                    context: context, message: 'Logging out...');
                 //SharedPreferenceUtil shared = SharedPreferenceUtil();
                 //await Workmanager().cancelAll();
                 //bool deletedAllValues = await shared.clearAll();
@@ -406,7 +423,8 @@ class MainPageState extends State<MainPage> {
 
   Future showExitDialog(BuildContext context) async {
     AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
         height: _mainHeight * 0.1,
         child: Column(
@@ -414,7 +432,10 @@ class MainPageState extends State<MainPage> {
           children: [
             Text(
               'Are you sure to exit the app ?',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black),
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.black),
             ),
             SizedBox(
               height: _mainHeight * 0.025,
@@ -427,14 +448,20 @@ class MainPageState extends State<MainPage> {
                   height: _mainHeight * 0.035,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                        backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.grey),
+                        shape:
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
                         )),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       'No',
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -443,14 +470,20 @@ class MainPageState extends State<MainPage> {
                   height: _mainHeight * 0.035,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(CustomTheme.appTheme),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            CustomTheme.appTheme),
+                        shape:
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
                         )),
                     onPressed: () => exit(0),
                     child: Text(
                       'Yes',
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -469,7 +502,9 @@ class MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _gridInput({required String hint, required Image icon, required Function callBack}) {
+
+  Widget _gridInput(
+      {required String hint, required Image icon, required Function callBack}) {
     return GestureDetector(
       onTap: () => callBack(),
       child: Container(
@@ -494,7 +529,7 @@ class MainPageState extends State<MainPage> {
             ),
             FittedBox(
               child: Container(
-                width: _mainWidth * 0.25,
+                width: _mainWidth*0.25,
                 child: Text(hint,
                     maxLines: 3,
                     style: TextStyle(
@@ -513,8 +548,12 @@ class MainPageState extends State<MainPage> {
   }
 
   Widget getTile(
-      {required BuildContext context, required Icon leading, required String title, required Function onTap}) {
-    return Container(
+      {required BuildContext context,
+        required Icon leading,
+        required String title,
+        required Function onTap}) {
+    return
+      Container(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
 
       /*decoration: BoxDecoration(
@@ -529,12 +568,14 @@ class MainPageState extends State<MainPage> {
         leading: Container(
             height: 40,
             width: 40,
-            decoration:
-                BoxDecoration(color: CustomTheme.appTheme.withAlpha(20), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(
+                color: CustomTheme.appTheme.withAlpha(20),
+                borderRadius: BorderRadius.circular(5)),
             child: leading),
         title: Text(
           title,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          style: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
         ),
         onTap: () => onTap(),
         trailing: Icon(
@@ -545,3 +586,5 @@ class MainPageState extends State<MainPage> {
     );
   }
 }
+
+

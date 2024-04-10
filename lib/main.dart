@@ -18,22 +18,19 @@ import 'package:workmanager/workmanager.dart';
 import 'modules/main_screen/controller/home_controller.dart';
 import 'modules/main_screen/view/main_screen.dart';
 
-
-
 @pragma('vm:entry-point')
 Future<void> callbackDispatcher() async {
- await GetStorage.init();
+  await GetStorage.init();
   Workmanager().executeTask((taskName, inputData) async {
     // userLocation();
 
     log("first logs 1");
     await homeController.getLastCallTimestamp();
 
-   // if (taskName == 'GetApiData') {
-      String date;
-      switch(taskName){
-
-        case 'GetApiData':
+    // if (taskName == 'GetApiData') {
+    String date;
+    switch (taskName) {
+      case 'GetApiData':
         {
           String mobileNo = inputData != null ? inputData['mobile'] : '';
 
@@ -41,28 +38,26 @@ Future<void> callbackDispatcher() async {
             date = DateTime.now().subtract(const Duration(days: 2)).toString();
             GetStorage().write(Constants.lastCallStamp, date);
             log('date $date');
-          }
-          else {
+          } else {
             date = GetStorage().read(Constants.lastCallStamp);
           }
 
           await homeController.callLogs(lastdate: date);
           break;
         }
-        case Workmanager.iOSBackgroundTask:
-          if (GetStorage().read(Constants.lastCallStamp) == null) {
-            date = DateTime.now().subtract(const Duration(days: 2)).toString();
-            GetStorage().write(Constants.lastCallStamp, date);
-            log('date $date');
-          }
-          else {
-            date = GetStorage().read(Constants.lastCallStamp);
-          }
+      case Workmanager.iOSBackgroundTask:
+        if (GetStorage().read(Constants.lastCallStamp) == null) {
+          date = DateTime.now().subtract(const Duration(days: 2)).toString();
+          GetStorage().write(Constants.lastCallStamp, date);
+          log('date $date');
+        } else {
+          date = GetStorage().read(Constants.lastCallStamp);
+        }
 
-          await homeController.callLogs(lastdate: date);
-          break;
-      }
-     /* if(Platform.isAndroid){
+        await homeController.callLogs(lastdate: date);
+        break;
+    }
+    /* if(Platform.isAndroid){
       String mobileNo = inputData != null ? inputData['mobile'] : '';
 
       if (GetStorage().read(Constants.lastCallStamp) == null) {
@@ -89,10 +84,11 @@ Future<void> callbackDispatcher() async {
 
         await homeController.callLogs(lastdate: date);
       }*/
-  //}
+    //}
     return Future.value(true);
   });
 }
+
 HomeController homeController = HomeController();
 
 /*
@@ -188,14 +184,14 @@ Future calllogs({required String? lastdate,
 }
 */
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await GetStorage.init();
+  await GetStorage.init();
   //Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
   _portraitModeOnly();
-   if(Platform.isAndroid){
-     await function();
-   }
+  if (Platform.isAndroid) {
+    await function();
+  }
   runApp(const MyApp());
 }
 
@@ -205,18 +201,21 @@ void _portraitModeOnly() {
     DeviceOrientation.portraitDown,
   ]);
 }
- Future<void> function() async{
-   if(await GetStorage().read(Constants.callSync)==1){
-   if(await GetStorage().read(Constants.isLogin)==true) {
-     await Workmanager().cancelAll();
-     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false,);
-     await GetStorage().write(Constants.background, true);
-   }
-     //homeController.getdata();
-   }
-  await GetStorage().write(Constants.background, false);
 
- }
+Future<void> function() async {
+  if (await GetStorage().read(Constants.callSync) == 1) {
+    if (await GetStorage().read(Constants.isLogin) == true) {
+      await Workmanager().cancelAll();
+      await Workmanager().initialize(
+        callbackDispatcher,
+        isInDebugMode: false,
+      );
+      await GetStorage().write(Constants.background, true);
+    }
+    //homeController.getdata();
+  }
+  await GetStorage().write(Constants.background, false);
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -224,7 +223,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      builder: (context,child){
+      builder: (context, child) {
         return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9), child: child ?? const Text(''));
       },
       title: 'RENTISEASY ADMIN',
@@ -233,7 +232,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         backgroundColor: Colors.white,
         primaryColor: CustomTheme.appTheme,
-
       ),
       home: const SplashScreenPage(),
     );
@@ -248,7 +246,6 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
-
   @override
   void initState() {
     goToSplash();
@@ -258,21 +255,20 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   void goToSplash() async {
     Timer(const Duration(seconds: 3), () async {
-    //  var sharedPreferences = await _prefs;
-      if(GetStorage().read(Constants.isLogin) == null){
-       // GetStorage().write(Constants.isLogin, false);
-        String date =  DateTime.now().subtract(const Duration(days: 2)).toString();
+      //  var sharedPreferences = await _prefs;
+      if (GetStorage().read(Constants.isLogin) == null) {
+        // GetStorage().write(Constants.isLogin, false);
+        String date = DateTime.now().subtract(const Duration(days: 2)).toString();
         GetStorage().write(Constants.lastCallStamp, date);
-       // GetStorage().write(Constants.lastCallStamp,);
+        // GetStorage().write(Constants.lastCallStamp,);
       }
-        if (GetStorage().read(Constants.isLogin)== true ) {
-          debugPrint('0000 ${GetStorage().read(Constants.isLogin)}');
-          Get.offAll(const MainPage());
-        } else {
-          debugPrint('1111 ${GetStorage().read(Constants.isLogin)} ');
-          Get.offAll(LoginScreen());
-        }
-
+      if (GetStorage().read(Constants.isLogin) == true) {
+        debugPrint('0000 ${GetStorage().read(Constants.isLogin)}');
+        Get.offAll(const MainPage());
+      } else {
+        debugPrint('1111 ${GetStorage().read(Constants.isLogin)} ');
+        Get.offAll(LoginScreen());
+      }
     });
   }
 
@@ -283,6 +279,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       await Permission.phone.request();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
