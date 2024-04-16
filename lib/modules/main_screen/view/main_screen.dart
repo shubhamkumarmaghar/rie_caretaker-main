@@ -140,6 +140,7 @@ class MainPageState extends State<MainPage> {
           ),
         ),
       ),
+      drawer: _getDrawer(context: context),
       body: WillPopScope(
         onWillPop: () async {
           showExitDialog(context);
@@ -302,7 +303,7 @@ class MainPageState extends State<MainPage> {
           navBarStyle: NavBarStyle
               .style3, // Choose the nav bar style with this property.
         ),*/
-      drawer: _getDrawer(context: context),
+
     );
   }
 

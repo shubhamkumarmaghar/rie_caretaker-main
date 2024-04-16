@@ -17,54 +17,34 @@ class LoginController extends GetxController {
   TextEditingController uPasswordController = TextEditingController();
 
   void careTakerRequest() async {
-    //CareTakerModel? ctModel;
-   // CareTakerLoginModelNew ctModel;
     try {
       final response = await rieUserApiService.postApiCall(
           endPoint: AppUrls.careTakerLogin,
           bodyParams: {
             "phone": unameController.text,
             "password": uPasswordController.text,
-          }, fromLogin: true);
+          },
+          fromLogin: true);
       if (response['message'] == 'failure') {
         log('Invalid Credential');
+      } else {
+        ctModel = CareTakerLoginModelNew.fromJson(response['data']);
+        GetStorage().write(Constants.isLogin, true);
+        GetStorage().write(Constants.callSync, ctModel?.callSync);
+        GetStorage().write(Constants.token, ctModel?.token.toString());
+        GetStorage().write(Constants.userId, ctModel?.userId.toString());
+        GetStorage().write(Constants.propertyId, jsonEncode(ctModel?.propertyId));
+        GetStorage().write(Constants.phonekey, '${ctModel?.phone}');
+        GetStorage().write(Constants.profileUrl, '${ctModel?.image}');
+        GetStorage().write(Constants.usernamekey, '${ctModel?.name}');
+        GetStorage().write(Constants.emailkey, '${ctModel?.email}');
+        GetStorage().write(Constants.rolekey, '${ctModel?.role}');
+
+
+        Get.offAll(const MainPage());
       }
-      else {
-        ctModel = CareTakerLoginModelNew.fromJson(response);
-          GetStorage().write(Constants.isLogin, true);
-          GetStorage().write(Constants.callSync, ctModel?.callSync);
-          //sharedPreferences.setBool(Constants.isLogin, true);
-          GetStorage().write(Constants.token, ctModel?.token.toString());
-          GetStorage().write(Constants.userId, ctModel?.userId.toString());
-          GetStorage().write(
-              Constants.propertyId, jsonEncode(ctModel?.propertyId));
-          GetStorage().write(Constants.phonekey, '${ctModel?.phone}');
-          GetStorage().write(Constants.profileUrl, '${ctModel?.image}');
-          GetStorage().write(Constants.usernamekey, '${ctModel?.name}');
-          GetStorage().write(Constants.emailkey, '${ctModel?.email}');
-          GetStorage().write(Constants.rolekey, '${ctModel?.role}');
-          log(GetStorage().read(Constants.token) + '${GetStorage().read(Constants.callSync)}' );
-
-          Get.offAll(const MainPage());
-          /* Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const MainPage()));*/
-       // } else {
-        //  showCustomToast(context, 'Invalid Credentials');
-        }
-        // } else {
-        //   showCustomToast(context, result['message']);
-        // }
-
-        //if (ctModel.id != null) {
-
-        // }
-      }
-      on Exception catch (error) {
+    } on Exception catch (error) {
       RIEWidgets.getToast(message: error.toString(), color: CustomTheme.white);
-      //showCustomToast(context, error.toString());
-      log('login ${error}');
-      //Navigator.pop(context);
     }
   }
-
 }

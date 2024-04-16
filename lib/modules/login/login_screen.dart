@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginScreen> {
-
+  bool obscureText = true;
   LoginController loginController = LoginController();
 
   @override
@@ -45,54 +45,71 @@ class _LoginState extends State<LoginScreen> {
                 height(0.05),
                 inputField('Phone Number', loginController.unameController, 5),
                 inputField('Password', loginController.uPasswordController, 10),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomTheme.appTheme,
-                    ),
-                    onPressed: () {
-                      if (loginController.unameController.text.isEmpty) {
-                        showCustomToast(context, 'Enter valid username');
-                      } else if (loginController.uPasswordController.text.isEmpty) {
-                        showCustomToast(context, 'Enter valid password');
-                      } else {
-                        loginController.careTakerRequest();
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15, bottom: 15, left: 27, right: 27),
+                height(0.1),
+                Container(
+                  height: 50,
+                  width: screenWidth * 0.8,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomTheme.appTheme,
+                      ),
+                      onPressed: () {
+                        if (loginController.unameController.text.isEmpty) {
+                          showCustomToast(context, 'Enter valid username');
+                        } else if (loginController.uPasswordController.text.isEmpty) {
+                          showCustomToast(context, 'Enter valid password');
+                        } else {
+                          loginController.careTakerRequest();
+                        }
+                      },
                       child: Text(
                         'Login',
                         style: TextStyle(
-                            fontFamily: Constants.fontsFamily,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )),
+                            fontFamily: Constants.fontsFamily, color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
+                ),
               ],
             ),
           )),
     );
   }
 
-  Widget inputField(
-      String hind, TextEditingController tController, double bottom) {
+  Widget inputField(String hind, TextEditingController tController, double bottom) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
       child: Container(
         padding: const EdgeInsets.all(3),
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(30),
           color: CustomTheme.white,
-          border: Border.all(color: const Color.fromARGB(255, 227, 225, 225)),
+          border: Border.all(color: CustomTheme.appTheme.withOpacity(0.2)),
         ),
         child: TextField(
           controller: tController,
+          obscureText:hind == 'Password'
+              ? obscureText:false,
           decoration: InputDecoration(
-              hoverColor: CustomTheme.appThemeContrast2,
-              hintText: hind,
-              border: InputBorder.none),
+            hoverColor: CustomTheme.appThemeContrast2,
+            hintText: hind,
+            contentPadding:  EdgeInsets.only(left: 20, right: 20,bottom:hind == 'Password'? 5:0),
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+              color: Colors.grey.shade400
+            ),
+            suffix: hind == 'Password'
+                ? InkWell(
+                    onTap: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },
+                    child: Icon(
+                      Icons.remove_red_eye,
+                      color: obscureText ? CustomTheme.appTheme : Colors.grey,
+                    ))
+                : null,
+          ),
         ),
       ),
     );
