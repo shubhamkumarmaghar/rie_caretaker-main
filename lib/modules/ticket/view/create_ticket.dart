@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:caretaker/utils/const/widgets.dart';
 import 'package:caretaker/utils/view/rie_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,18 +54,16 @@ class _CreateTicketState extends State<CreateTicket> {
         leading: BackButton(
           color: CustomTheme.white,
         ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
         titleSpacing: -10,
         backgroundColor: CustomTheme.appTheme,
-        title: Padding(
+        title: const Padding(
           padding: EdgeInsets.all(10),
-          child: Text('Create Ticket ',
-              style: TextStyle(color: Colors.white, fontSize: 16)),
+          child: Text('Create Ticket ', style: TextStyle(color: Colors.white, fontSize: 16)),
         ),
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(
@@ -77,18 +76,17 @@ class _CreateTicketState extends State<CreateTicket> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: Get.height * 0.05,
+                height: Get.height * 0.02,
               ),
               Text(
                 'Choose Property',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'malgun',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: CustomTheme.appThemeContrast,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -120,20 +118,7 @@ class _CreateTicketState extends State<CreateTicket> {
                     log('selected property ${controller.selectedProperty?.title.toString()}');
                   },
                   value: controller.selectedProperty,
-                  items:
-                      /*controller.ticketPropertiesList.map((items) {
-              return DropdownMenuItem<String>(
-
-                value: items.toString(),
-
-                child: Text(items.toString()),
-
-              );
-
-            }).toList(),*/
-                      controller.ticketPropertiesList
-                          ?.map<DropdownMenuItem<Properties>>(
-                              (Properties prop) {
+                  items: controller.ticketPropertiesList?.map<DropdownMenuItem<Properties>>((Properties prop) {
                     return DropdownMenuItem<Properties>(
                       value: prop,
                       child: Row(
@@ -146,88 +131,69 @@ class _CreateTicketState extends State<CreateTicket> {
                 ),
               ),
               controller.flatsList != null && controller.flatsList!.isNotEmpty
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          const SizedBox(height: 20),
-                          Text(
-                            'Choose Flat',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'malgun',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                  ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                height(0.01),
+                      Text(
+                        'Choose Flat',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: CustomTheme.appThemeContrast,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        height: 50,
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            height: 50,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: DropdownButton<Flats>(
-                              autofocus: true,
-                              borderRadius: BorderRadius.circular(20),
-                              isExpanded: true,
-                              underline: SizedBox(),
-                              hint: Text('Selcet Flat'),
-                              onChanged: (flats) {
-                                setState(
-                                    () => controller.selectedFlats = flats);
+                          ],
+                        ),
+                        child: DropdownButton<Flats>(
+                          autofocus: true,
+                          borderRadius: BorderRadius.circular(20),
+                          isExpanded: true,
+                          underline: SizedBox(),
+                          hint: Text('Selcet Flat'),
+                          onChanged: (flats) {
+                            setState(() => controller.selectedFlats = flats);
 
-                                log('selected flats ${controller.selectedFlats?.title.toString()}');
-                              },
-                              value: controller.selectedFlats,
-                              items:
-                                  /*controller.ticketPropertiesList.map((items) {
-
-              return DropdownMenuItem<String>(
-
-                value: items.toString(),
-
-                child: Text(items.toString()),
-
-              );
-
-            }).toList(),*/
-                                  controller.flatsList
-                                      ?.map<DropdownMenuItem<Flats>>(
-                                          (Flats flats) {
-                                return DropdownMenuItem<Flats>(
-                                  value: flats,
-                                  child: Row(
-                                    children: [
-                                      Text('${flats.value} ${flats.title}'),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ])
+                            log('selected flats ${controller.selectedFlats?.title.toString()}');
+                          },
+                          value: controller.selectedFlats,
+                          items: controller.flatsList?.map<DropdownMenuItem<Flats>>((Flats flats) {
+                            return DropdownMenuItem<Flats>(
+                              value: flats,
+                              child: Row(
+                                children: [
+                                  Text('${flats.value} ${flats.title}'),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ])
                   : Container(),
-              const SizedBox(height: 20),
+              height(0.02),
               Text(
                 'Choose Category',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'malgun',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: CustomTheme.appThemeContrast,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height:5),
               Container(
                 alignment: Alignment.center,
 
@@ -262,21 +228,7 @@ class _CreateTicketState extends State<CreateTicket> {
                   },
                   value: controller.selectedCategory,
                   items:
-
-                      /*controller.ticketPropertiesList.map((items) {
-
-              return DropdownMenuItem<String>(
-
-                value: items.toString(),
-
-                child: Text(items.toString()),
-
-              );
-
-            }).toList(),*/
-
-                      controller.ticketCategoriesList
-                          ?.map<DropdownMenuItem<String>>((value) {
+                      controller.ticketCategoriesList?.map<DropdownMenuItem<String>>((value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Row(
@@ -288,7 +240,7 @@ class _CreateTicketState extends State<CreateTicket> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 8),
+              height(0.01),
               TextFieldWithTitle(
                 title: 'Ticket  Description',
                 controller: controller.ticketDescription,
@@ -301,16 +253,16 @@ class _CreateTicketState extends State<CreateTicket> {
                   }
                 },
               ),
+              height(0.01),
               Text(
                 'Choose Status',
                 style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'malgun',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: CustomTheme.appThemeContrast,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               Container(
                 alignment: Alignment.center,
 
@@ -338,19 +290,8 @@ class _CreateTicketState extends State<CreateTicket> {
                     log('selected status ${controller.selectedStatus}');
                   },
                   value: controller.selectedStatus,
-                  items: /*controller.ticketPropertiesList.map((items) {
-
-              return DropdownMenuItem<String>(
-
-                value: items.toString(),
-
-                child: Text(items.toString()),
-
-              );
-
-            }).toList(),*/
-                      controller.ticketStatusList
-                          ?.map<DropdownMenuItem<String>>((value) {
+                  items:
+                      controller.ticketStatusList?.map<DropdownMenuItem<String>>((value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Row(
@@ -362,173 +303,133 @@ class _CreateTicketState extends State<CreateTicket> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 8),
-              Align(alignment: Alignment.centerRight,
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () async {
                     await controller.updateTicketImg(context);
                     setState(() {});
                   },
                   child: Container(
-                    alignment: Alignment.center,
-                    width: Get.width * 0.3,
+                    width: Get.width * 0.4,
                     height: Get.height * 0.04,
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.orange,
+                      color: Colors.black,
                     ),
-                    child: FittedBox(
-                        child: Text(
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.image,color: Colors.white,),
+                        Text(
                           "Add Images",
                           style: TextStyle(color: Colors.white, fontSize: 16),
-                        )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Obx(() =>Container(
+              height(0.01),
+              Obx(
+                () => Container(
                   width: Get.width,
-                  height: Get.height * 0.25,
+                  height: Get.height * 0.2,
                   child: ListView.builder(
                       itemCount: controller.ticketImgUrl.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         log('lenght ${index} ${controller.ticketImgUrl[index]}');
                         var data = controller.ticketImgUrl[index];
-                       // controller.update();
+                        // controller.update();
                         return GestureDetector(
                           onTap: () async {
-                       //     await controller.updateTicketImg(context);
-                            Get.to(
-                                ImageView(profileUrl: '${controller.ticketImgUrl[index]}',)
-                            );
-
+                            Get.to(ImageView(
+                              profileUrl: '${controller.ticketImgUrl[index]}',
+                            ));
                           },
                           child: Container(
-                            height: Get.height*0.25,
-                            width: Get.height*0.21,
-                            child:Card(shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15.0),
-                                topLeft: Radius.circular(15.0),
-                                bottomLeft: Radius.circular(15.0),
-                              ),
-                            ),
-                              clipBehavior: Clip.hardEdge,
-                              child: CachedNetworkImageWidget(
-                                  imageUrl: data,
-                                  width: Get.height*0.25,
-                                  height: Get.height*0.21,
-                                  fit: BoxFit.fill,
-                                  errorWidget: (context, url,
-                                      error) =>
-                                      Center(
-                                        child:  Card(
-                                          color: Colors.red.shade50,
-                                          child: Lottie.asset(
-                                            'assets/images/add_images.json',
+                              width: Get.width * 0.4,
+                              child: Card(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0),
+                                  ),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: CachedNetworkImageWidget(
+                                    imageUrl: data,
+                                    width: Get.height * 0.25,
+                                    height: Get.height * 0.21,
+                                    fit: BoxFit.fill,
+                                    errorWidget: (context, url, error) => Center(
+                                          child: Card(
+                                            color: Colors.red.shade50,
+                                            child: Lottie.asset(
+                                              'assets/images/add_images.json',
+                                            ),
                                           ),
-                                          /* CupertinoActivityIndicator(
-                        radius: 15,
-                        color: Colors.black,
-                      ),*/
-                                        ),),
-                                  placeholder: (context, url) =>
-                                  const Center(
-                                      child: CupertinoActivityIndicator(
-                                          color: Colors
-                                              .black,
-                                          radius: 15))
-                              ),
-                            )
-                          ),
+                                        ),
+                                    placeholder: (context, url) => const Center(
+                                        child: CupertinoActivityIndicator(color: Colors.black, radius: 15))),
+                              )),
                         );
-                        /*  GestureDetector(
-                            onTap: () async{ await controller.updateTicketImg(context);
-                            log("hello ${controller.ticketImage}",);
-                            setState(() {
-
-                            });
-                            },
-                          child: Container(
-                            height: Get.height*0.25,
-                            width: Get.width*0.35,
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image:controller.ticketImgUrl[index].isNotEmpty && controller.ticketImage.path.isEmpty? NetworkImage(controller.ticketImgUrl[index].toString()):const AssetImage('assets/images/add_images.png',)as ImageProvider<Object>,
-                               /* controller.ticketImgUrl[index].isNotEmpty && controller.ticketImage.path.isEmpty
-                                    ? const AssetImage('assets/images/add_images.png',)
-                                    : FileImage(controller.ticketImage)
-                                as ImageProvider<Object>*/
-                              ),
-                            ),
-                          ),
-                        );*/
                       }),
                 ),
               ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: () async {
-                    if (controller.selectedProperty?.value == null) {
-                      RIEWidgets.getToast(
-                          message: 'Please Select Property',
-                          color: CustomTheme.white);
-                      return;
-                    }
-                    if (controller.selectedProperty?.value == null) {
-                      RIEWidgets.getToast(
-                          message: 'Please Select Category',
-                          color: CustomTheme.white);
-                      return;
-                    }
-                    if (controller.selectedProperty?.value == null) {
-                      RIEWidgets.getToast(
-                          message: 'Please Enter description about the ticket',
-                          color: CustomTheme.white);
-                      return;
-                    }
-                    if (controller.selectedCategory == null ||
-                        controller.selectedCategory == '') {
-                      RIEWidgets.getToast(
-                          message: 'Please Select tickets Category',
-                          color: CustomTheme.white);
-                      return;
-                    }
-                    await controller.createTicket(
-                        propertyId:
-                            '${controller.selectedProperty?.value.toString()}',
-                        flatId: '${controller.selectedFlats?.value.toString()}',
-                        ticketCate: controller.selectedCategory.toString(),
-                        ticketDesc: controller.ticketDescription.text,
-                        ticketStat: controller.selectedStatus.toString(),
-                        );
-                    Get.back();
-                  },
-                  child:
-                  Container(
-                    alignment: Alignment.center,
-                    width: Get.width * 0.3,
-                    height: Get.height * 0.04,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.orange,
-                    ),
-                    child: FittedBox(
-                        child: Text(
-                      "Create Ticket",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    )),
-                  ),
-                ),
-              ),
+
+              const SizedBox(height: 40),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+        child: GestureDetector(
+          onTap: () async {
+            if (controller.selectedProperty?.value == null) {
+              RIEWidgets.getToast(message: 'Please Select Property', color: CustomTheme.white);
+              return;
+            }
+            if (controller.selectedProperty?.value == null) {
+              RIEWidgets.getToast(message: 'Please Select Category', color: CustomTheme.white);
+              return;
+            }
+            if (controller.selectedProperty?.value == null) {
+              RIEWidgets.getToast(
+                  message: 'Please Enter description about the ticket', color: CustomTheme.white);
+              return;
+            }
+            if (controller.selectedCategory == null || controller.selectedCategory == '') {
+              RIEWidgets.getToast(message: 'Please Select tickets Category', color: CustomTheme.white);
+              return;
+            }
+            await controller.createTicket(
+              propertyId: '${controller.selectedProperty?.value.toString()}',
+              flatId: '${controller.selectedFlats?.value.toString()}',
+              ticketCate: controller.selectedCategory.toString(),
+              ticketDesc: controller.ticketDescription.text,
+              ticketStat: controller.selectedStatus.toString(),
+              context: context
+            );
+          },
+          child: Container(
+            alignment: Alignment.center,
+            width: Get.width * 0.8,
+            height: Get.height * 0.06,
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: CustomTheme.appTheme,
+            ),
+            child: Text(
+              "Create Ticket",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ),
         ),
       ),

@@ -29,11 +29,8 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
   @override
   void initState() {
     super.initState();
-    // data = controller.getSingleTicketDetails.data;
-    controller.ticketDescription.text =
-        '${controller.getSingleTicketDetails.data?.description}';
-    controller.selectedStatus =
-        '${controller.getSingleTicketDetails.data?.status}';
+    controller.ticketDescription.text = '${controller.getSingleTicketDetails.data?.description}';
+    controller.selectedStatus = '${controller.getSingleTicketDetails.data?.status}';
     controller.getSingleTicketDetails.data?.proofs?.forEach((element) {
       controller.ticketImgUrl.add('${element.url}');
     });
@@ -59,14 +56,12 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
           color: CustomTheme.white,
         ),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15))),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
         titleSpacing: -10,
         backgroundColor: CustomTheme.appTheme,
         title: Padding(
           padding: EdgeInsets.all(10),
-          child: Text(' Ticket Id : ${data?.id}',style: TextStyle(color: Colors.white,fontSize: 16)),
+          child: Text(' Ticket Id : ${data?.id}', style: TextStyle(color: Colors.white, fontSize: 16)),
         ),
       ),
       body: SingleChildScrollView(
@@ -76,13 +71,12 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
               children: [
                 Card(
                   color: CustomTheme.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   margin: EdgeInsets.all(10),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
-                      height: Get.height*0.5,
+                      height: Get.height * 0.5,
                       child: ListView(
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -92,18 +86,15 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              customText(
-                                  text:
-                                  'Created On : ${dateConvert('${data?.createdOn}')}'),
-                              customText(
-                                  text:
-                                      'Status : ${data?.status.toString().capitalizeFirst}'),
+                              customText(text: 'Created On : ${dateConvert('${data?.createdOn}')}'),
+                              customText(text: 'Status : ${data?.status.toString().capitalizeFirst}'),
                             ],
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               customText(text: 'Flat Name :  ${data?.unitId}'),
                               customText(text: 'Category :  ${data?.category}'),
@@ -117,29 +108,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                           customText(text: 'Description : ${data?.description}'),
                           const SizedBox(
                             height: 10,
-                          ),/*
-                          customText(
-                              text:
-                                  'Reminds On : ${dateConvert('${data?.remindOn.toString()}')}'),
-                          const SizedBox(
-                            height: 10,
                           ),
-                          customText(
-                              text:
-                                  'Closed On : ${dateConvert('${data?.closedOn.toString()}')}'),*/
-                          //  const SizedBox(height: 10,),
-                         /* TextFieldWithTitle(
-                            title: 'Update Ticket Description',
-                            controller: controller.ticketDescription,
-                            inputType: TextInputType.text,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter an Updated ticket description';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),*/
                           const SizedBox(height: 8),
                           const Text(
                             'Update Status',
@@ -172,24 +141,14 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
 
                             child: DropdownButton<String>(
                               underline: SizedBox(),
-                              hint: Text('Selcet Status'),
+                              hint: const Text('Selcet Status'),
                               isExpanded: true,
                               onChanged: (status) {
-                                setState(
-                                    () => controller.selectedStatus = status);
+                                setState(() => controller.selectedStatus = status);
                                 log('selected status ${controller.selectedStatus}');
                               },
                               value: controller.selectedStatus,
-                              items:
-                              /*controller.ticketPropertiesList.map((items) {
-                                    return DropdownMenuItem<String>(
-                                      value: items.toString(),
-                                      child: Text(items.toString()),
-                                    );
-                                  }).toList(),*/
-
-                                  controller.ticketStatusList
-                                      ?.map<DropdownMenuItem<String>>((value) {
+                              items: controller.ticketStatusList?.map<DropdownMenuItem<String>>((value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Row(
@@ -202,7 +161,8 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Obx(() => Container(
+                          Obx(
+                            () => Container(
                               width: Get.width,
                               height: Get.height * 0.2,
                               child: ListView.builder(
@@ -213,31 +173,30 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                                     var data = controller.ticketImgUrl[index];
                                     return GestureDetector(
                                       onTap: () async {
-                                        Get.to(
-                                            ImageView(profileUrl: '${controller.ticketImgUrl[index]}',)
-                                        );
-                                      //  await controller.updateTicketImg(context);
+                                        Get.to(ImageView(
+                                          profileUrl: '${controller.ticketImgUrl[index]}',
+                                        ));
+                                        //  await controller.updateTicketImg(context);
                                       },
                                       child: Container(
-                                          height: Get.height*0.15,
-                                          width: Get.height*0.2,
-                                          child:Card(shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(15.0),
-                                              topLeft: Radius.circular(15.0),
-                                              bottomLeft: Radius.circular(15.0),
+                                          height: Get.height * 0.15,
+                                          width: Get.height * 0.2,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15.0),
+                                                topLeft: Radius.circular(15.0),
+                                                bottomLeft: Radius.circular(15.0),
+                                              ),
                                             ),
-                                          ),
                                             clipBehavior: Clip.hardEdge,
                                             child: CachedNetworkImageWidget(
                                                 imageUrl: data,
-                                                width: Get.height*0.25,
-                                                height: Get.height*0.21,
+                                                width: Get.height * 0.25,
+                                                height: Get.height * 0.21,
                                                 fit: BoxFit.fill,
-                                                errorWidget: (context, url,
-                                                    error) =>
-                                                    Center(
-                                                      child:  Card(
+                                                errorWidget: (context, url, error) => Center(
+                                                      child: Card(
                                                         color: Colors.red.shade50,
                                                         child: Lottie.asset(
                                                           'assets/images/add_images.json',
@@ -246,83 +205,75 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                                                     radius: 15,
                                                     color: Colors.black,
                                                   ),*/
-                                                      ),),
-                                                placeholder: (context, url) =>
-                                                const Center(
-                                                    child: CupertinoActivityIndicator(
-                                                        color: Colors
-                                                            .black,
-                                                        radius: 15))
-                                            ),
-                                          )
-                                      ),
+                                                      ),
+                                                    ),
+                                                placeholder: (context, url) => const Center(
+                                                    child:
+                                                        CupertinoActivityIndicator(color: Colors.black, radius: 15))),
+                                          )),
                                     );
-
                                   }),
                             ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               GestureDetector(
                                 onTap: () async {
                                   await controller.updateTicketImg(context);
-                                  log(
-                                    "hello ${controller.ticketImage}",
-                                  );
-                                  log('${controller.ticketImgUrl.length}');
                                   setState(() {});
                                 },
                                 child: Container(
-                                  alignment: Alignment.center,
-                                  width: Get.width * 0.3,
-                                  height: Get.height * 0.04,
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.orange,
-                                  ),
-                                  child: FittedBox(
-                                      child: Text(
-                                        "Add Images",
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
-                                      )),
-                                ),
+                                    alignment: Alignment.center,
+                                    width: Get.width * 0.32,
+                                    height: Get.height * 0.04,
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.orange,
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Icon(
+                                          Icons.image,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          "Add Images",
+                                          style: TextStyle(color: Colors.white, fontSize: 16),
+                                        ),
+                                      ],
+                                    )),
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  int res = await controller.updateTicket(
+                                  await controller.updateTicket(
+                                      context: context,
                                       ticketId: '${data?.id.toString()}',
                                       flatId: '${data?.unitId.toString()}',
                                       propId: '${data?.propId.toString()}',
                                       ticketCate: '${data?.category.toString()}',
                                       ticketDesc: controller.ticketDescription.text,
                                       ticketStat: controller.selectedStatus.toString());
-                                  RIEWidgets.getToast(
-                                      message: res == 200
-                                          ? 'Ticket Updated Successfully'
-                                          : 'Failed to Update',
-                                      color: Colors.white);
-                                  Get.back();
                                 },
                                 child: Container(
-                                      width: Get.width * 0.3,
-                                      height: Get.height * 0.04,
-                                      padding: const EdgeInsets.all(9),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.orange,
-                                      ),
-                                      child: const FittedBox(
-                                          child: Text(
-                                        "Update Ticket",
-                                        style:
-                                            TextStyle(color: Colors.white, fontSize: 16),
-                                      )),
-                                    ),
-
+                                  width: Get.width * 0.32,
+                                  height: Get.height * 0.04,
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.orange,
+                                  ),
+                                  child: const FittedBox(
+                                      child: Text(
+                                    "Update Ticket",
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                  )),
+                                ),
                               ),
                             ],
                           ),
@@ -331,27 +282,27 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                     ),
                   ),
                 ),
-            SizedBox(height: Get.height*0.4,
-              child: Card(
-                color: CustomTheme.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                margin: const EdgeInsets.all(10),
-                child: Padding(padding: EdgeInsets.all(10.0),
-                  child: ListView.builder(
-    itemCount: data?.followUps?.length,
-    itemBuilder: (context, index) {
-      var data1 = data?.followUps?[index];
-      return Container(
-        margin: const EdgeInsets.only(top: 5),
-          child: Text('${dateConvert('${data1?.addedOn}')} (${data1?.addedBy}): ${data1?.followUp}'));
-    }),
-
-
+                SizedBox(
+                  height: Get.height * 0.4,
+                  child: Card(
+                    color: CustomTheme.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.all(10),
+                    child: Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ListView.builder(
+                          itemCount: data?.followUps?.length,
+                          itemBuilder: (context, index) {
+                            var data1 = data?.followUps?[index];
+                            return Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                    '${dateConvert('${data1?.addedOn}')} (${data1?.addedBy}): ${data1?.followUp}'));
+                          }),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-               /* GestureDetector(
+                /* GestureDetector(
                   onTap: () async {
                     int res = await controller.updateTicket(
                         ticketId: '${data?.id.toString()}',

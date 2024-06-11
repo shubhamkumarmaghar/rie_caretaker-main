@@ -39,13 +39,12 @@ class _TextFieldWithTitleState extends State<TextFieldWithTitle> {
           Text(
             widget.title,
             style: TextStyle(
-              fontSize: 13,
-              fontFamily: 'malgun',
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: CustomTheme.appThemeContrast,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 5),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -64,8 +63,10 @@ class _TextFieldWithTitleState extends State<TextFieldWithTitle> {
               maxLength: widget.maxlength,
               keyboardType: widget.inputType,
               obscureText: widget.obscureText,
-              style: TextStyle(
-                fontSize: 13,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+
                 color: Colors.black,
               ),
               decoration: InputDecoration(

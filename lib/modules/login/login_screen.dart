@@ -59,7 +59,7 @@ class _LoginState extends State<LoginScreen> {
                         } else if (loginController.uPasswordController.text.isEmpty) {
                           showCustomToast(context, 'Enter valid password');
                         } else {
-                          loginController.careTakerRequest();
+                          loginController.careTakerRequest(context);
                         }
                       },
                       child: Text(

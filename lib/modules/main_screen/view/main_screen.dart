@@ -73,12 +73,6 @@ class MainPageState extends State<MainPage> {
     });
   }
 
-  // fetchUserDet() async {
-  //   var sharedPreferences = await _prefs;
-  //   imageUrl = sharedPreferences.getString(Constants.profileUrl).toString();
-  //   setState(() {});
-  // }
-
   @override
   Widget build(BuildContext context) {
     _mainHeight = Get.height;
@@ -86,7 +80,7 @@ class MainPageState extends State<MainPage> {
     PersistentTabController controller;
     controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
-      // backgroundColor: CustomTheme.errorColor,
+
       appBar: appBarWidget('RENTISEASY ADMIN', '', context, false),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -312,7 +306,6 @@ class MainPageState extends State<MainPage> {
   }) {
     return Drawer(
       key: _drawerKey,
-
       backgroundColor: CustomTheme.white,
       child: Container(
         height: Get.height,

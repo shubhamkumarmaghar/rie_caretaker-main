@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:caretaker/modules/ticket/view/create_ticket.dart';
+import 'package:caretaker/theme/custom_theme.dart';
+import 'package:caretaker/utils/loader_dialogs/progress_loader.dart';
 import 'package:caretaker/utils/view/rie_widgets.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -18,9 +20,10 @@ import '../model/TicketListModel.dart';
 import '../model/ticketModel.dart';
 import '../model/ticket_config_model.dart';
 
-class AllTicketController extends GetxController{
+class AllTicketController extends GetxController {
   TextEditingController ticketDescription = TextEditingController();
   bool isLoading = false;
+
   //String? selectFlat = 'Select Flat';
   File ticketImage = File('');
   RxList<String> ticketImgUrl = <String>[].obs;
@@ -33,14 +36,12 @@ class AllTicketController extends GetxController{
   List<String>? ticketStatusList;
   List<Properties>? ticketPropertiesList;
   List<Flats>? flatsList;
-  Properties? selectedProperty ;
-  Flats? selectedFlats;
-  String? selectedCategory ;
-  String? selectedStatus ;
+  Properties? selectedProperty;
 
- /* Properties? selectedProperty = Properties(title: 'Select Flat',value: 0);
-  String? selectedCategory ='Select Category';
-  String? selectedStatus ='Select Status';*/
+  Flats? selectedFlats;
+  String? selectedCategory;
+
+  String? selectedStatus;
 
   @override
   void onInit() {
@@ -49,10 +50,11 @@ class AllTicketController extends GetxController{
     //fetchTicketListDetails();
   }
 
-  void getData()async{
-    await  fetchTicketListDetails();
-   // await fetchTicketConfigListDetails();
+  void getData() async {
+    await fetchTicketListDetails();
+    // await fetchTicketConfigListDetails();
   }
+
   Future<void> fetchTicketListDetails() async {
     String url = AppUrls.tickets;
     isLoading = true;
@@ -62,12 +64,12 @@ class AllTicketController extends GetxController{
     if (data['message'].toString().toLowerCase().contains('success')) {
       getAllDetails = TicketListModel.fromJson(data);
       update();
-      isLoading=false;
+      isLoading = false;
     } else {
-      getAllDetails= TicketListModel(
+      getAllDetails = TicketListModel(
         message: 'failure',
       );
-      isLoading=false;
+      isLoading = false;
       update();
     }
   }
@@ -78,82 +80,68 @@ class AllTicketController extends GetxController{
     final response = await _apiService.getApiCallWithURL(endPoint: url);
 
     final data = response as Map<String, dynamic>;
+    isLoading = false;
     if (data['message'].toString().toLowerCase().contains('success')) {
       ticketConfigModel = TicketConfigModel.fromJson(data);
-      //ticketCategoriesList?.add('Select Category');
-    //  log('aaaaaaaaaaaaa'+ '${ticketCategoriesList?[0]}');
-     // var cat = ticketConfigModel.data?.categories??[];
-       ticketCategoriesList = ticketConfigModel.data?.categories??[];
-     // ticketCategoriesList?.addAll(cat);
-      ticketCategoriesList?.forEach((element) {log(element); });
+      ticketCategoriesList = ticketConfigModel.data?.categories ?? [];
+
+      ticketStatusList = ticketConfigModel.data?.status ?? [];
+
+      ticketStatusList!.forEach((element) {
+        log('dddd ${element}');
+      });
+
+      ticketPropertiesList = ticketConfigModel.data?.properties ?? [];
+
       update();
-      isLoading=false;
-
-     // ticketStatusList?.add('Select Status');
-    //  var stat = ticketConfigModel.data?.status??[];
-     // ticketStatusList?.addAll(stat);
-      ticketStatusList = ticketConfigModel.data?.status??[];
-    //  ticketStatusList?.forEach((element) {log('skkkkk  $element'); });
-
-    //  var prop = ticketConfigModel.data?.properties??[];
-     ticketPropertiesList = ticketConfigModel.data?.properties??[];
-     //flatsList = ticketConfigModel.data?.properties??[];
-      //ticketPropertiesList?.add(Properties(title: 'Select Flat',value: 0));
-     // ticketPropertiesList?.addAll(prop);
-     // ticketPropertiesList?.forEach((element) {log('${element.value} ${element.title},'); });
-      update();
-
     } else {
       ticketConfigModel = TicketConfigModel(
         message: 'failure',
       );
-      isLoading=false;
       update();
     }
   }
 
-  Future<int> createTicket({
+  Future<void> createTicket({
     required String propertyId,
-    String flatId ='',
+    String flatId = '',
     required String ticketCate,
     required String ticketDesc,
     required String ticketStat,
-
+    required BuildContext context,
   }) async {
+    showProgressLoader(context);
     String url = AppUrls.ticket;
-    List<Map<String,String>> imgList = [];
-    ticketImgUrl.forEach((element) { 
-      imgList.add({'url':element});
-    });
+    List<Map<String, String>> imgList = [];
+    for (var element in ticketImgUrl) {
+      imgList.add({'url': element});
+    }
     Createticket c = Createticket.fromJson({
-      "propId":propertyId.toString(),
+      "propId": propertyId.toString(),
       "unitId": flatId.toString(),
       "category": ticketCate,
       "description": ticketDesc,
       "status": ticketStat,
       "proofs": imgList
     });
-    final response =
-     await _apiService.postApiCallFormData(endPoint: url,
-         bodyParams:c.toJson(),);
-    /*await _apiService.postApiCall(endPoint: url,
-      bodyParams: c.toJson()
-      {
-      "propId":propertyId.toString(),
-      "unitId": flatId.toString(),
-      "category": ticketCate,
-      "description": ticketDesc,
-      "status": ticketStat,
-      "proofs": imgList
-    },
-    );*/
-    
-    final data = response as Map<String, dynamic>;
 
-    return data['message'].toString().toLowerCase().contains('failure') ? 404 : 200;
+    log('create ticket params :: ${c.toJson()}');
+    final response = await _apiService.postApiCallFormData(
+      endPoint: url,
+      bodyParams: c.toJson(),
+    );
+
+    final data = response as Map<String, dynamic>;
+    cancelLoader();
+    if (data['message'].toString().toLowerCase().contains('success')) {
+      RIEWidgets.getToast(message: 'Ticket created successfully', color: CustomTheme.myFavColor);
+      Get.back();
+    } else {
+      RIEWidgets.getToast(message: data['message'] ?? 'Failed to create ticket', color: CustomTheme.errorColor);
+    }
   }
 
-  Future<int> updateTicket({
+  Future<void> updateTicket({
     //location="+location+"&prop_type="+prop_type+"&added_on="+added_on+"&assign_to="+assign_to+"&contact_details="+contact_details+"&lead_status=Active"+"&origin="+area;
     required String flatId,
     required String ticketCate,
@@ -161,14 +149,16 @@ class AllTicketController extends GetxController{
     required String ticketStat,
     required String ticketId,
     required String propId,
+    required BuildContext context,
   }) async {
+    showProgressLoader(context);
     String url = AppUrls.ticket;
-    List<Map<String,String>> imgList = [];
+    List<Map<String, String>> imgList = [];
     for (var element in ticketImgUrl) {
-      imgList.add({'url':element});
+      imgList.add({'url': element});
     }
     Createticket c = Createticket.fromJson({
-      "id":ticketId,
+      "id": ticketId,
       "unitId": flatId,
       "propId": propId,
       "category": ticketCate,
@@ -176,68 +166,64 @@ class AllTicketController extends GetxController{
       "status": ticketStat,
       "proofs": imgList
     });
-    final response = await _apiService.putApiCallFormData(endPoint: url, bodyParams: c.toJson(),
-        /*{
-      "id":ticketId,
-      "unitId": flatId,
-      "propId": propId,
-      "category": ticketCate,
-      "description": ticketDesc,
-      "status": ticketStat,
-      "proofs":
-    }*/);
+    log('update ticket params :: ${c.toJson()}');
+    final response = await _apiService.putApiCallFormData(
+      endPoint: url,
+      bodyParams: c.toJson(),
+    );
     final data = response as Map<String, dynamic>;
+    cancelLoader();
 
-    return data['message'].toString().toLowerCase().contains('success') ? 200 : 404;
+    if (data['message'].toString().toLowerCase().contains('success')) {
+      RIEWidgets.getToast(message: 'Ticket Updated Successfully', color: CustomTheme.myFavColor);
+      Get.back();
+    } else {
+      RIEWidgets.getToast(message: data['message'] ?? 'Failed to Update', color: CustomTheme.errorColor);
+    }
   }
+
   Future<void> fetchTicketDetails(String ticketId) async {
     String url = AppUrls.ticket;
     url = '$url?id=$ticketId';
     isLoading = true;
-    final response = await _apiService.getApiCallWithURL(endPoint: url,);
+    final response = await _apiService.getApiCallWithURL(
+      endPoint: url,
+    );
     final data = response as Map<String, dynamic>;
     if (data['message'].toString().toLowerCase().contains('success')) {
       getSingleTicketDetails = TicketModel.fromJson(data);
       update();
-      isLoading=false;
+      isLoading = false;
     } else {
       getSingleTicketDetails = TicketModel(
         message: 'failure',
       );
-      isLoading=false;
+      isLoading = false;
       update();
     }
   }
-Future<void> getTicketImgUrl(File imgaeFile)async {
- String url = AppUrls.ticketProof;
-  final response = await _apiService.postApiCallWithImg(endPoint: url, bodyParams: {
-   /* "id":ticketId,
-    "unitId": flatId,
-    "propId": propId,
-    "category": ticketCate,
-    "description": ticketDesc,
-    "status": ticketStat,*/
-  },img: imgaeFile,
-   imgKey: 'file');
-  final data = response as Map<String, dynamic>;
-if(data['message']=='Image uploaded successfully')
-  {
-String url = '${data['url']}';
-if(url.isNotEmpty){
-  ticketImgUrl.add(url);
-  ticketImage = File('');
 
-}
-    log('log Url ${data['url']}');
-update();
-   // return '${data['url']}';
+  Future<void> getTicketImgUrl(File imgaeFile) async {
+    showProgressLoader(Get.context!);
+    String url = AppUrls.ticketProof;
+    final response =
+        await _apiService.postApiCallWithImg(endPoint: url, bodyParams: {}, img: imgaeFile, imgKey: 'file');
+    final data = response as Map<String, dynamic>;
+    cancelLoader();
+    if (data['message'] == 'Image uploaded successfully') {
+      String url = '${data['url']}';
+      if (url.isNotEmpty) {
+        ticketImgUrl.add(url);
+        ticketImage = File('');
+      }
+      log('log Url ${data['url']}');
+      update();
+    } else {
+      RIEWidgets.getToast(message: '${data['message']}', color: Colors.white);
+      update();
+      //return '';
+    }
   }
-else{
-  RIEWidgets.getToast(message: '${data['message']}', color: Colors.white);
- update();
-  //return '';
-}
-}
 
   Future<void> updateTicketImg(BuildContext context) async {
     try {
@@ -296,16 +282,13 @@ else{
       );
 
       if (source != null) {
-
         final pickedFile = await _picker.pickImage(source: source);
         if (pickedFile == null) {
-
           // throw Exception('No image file was picked.');
-        }
-        else {
+        } else {
           File? croppedFile = await ImageCropper().cropImage(
             sourcePath: pickedFile!.path,
-           /* aspectRatioPresets: [
+            /* aspectRatioPresets: [
               CropAspectRatioPreset.square,
             ],*/
             androidUiSettings: const AndroidUiSettings(
@@ -313,7 +296,6 @@ else{
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false,
             ),
-
           );
 
           if (croppedFile == null) {
@@ -321,11 +303,9 @@ else{
           }
           isLoading = true;
           try {
-            //String? downloadUrl = await _uploadFile(croppedFile!, type);
             ticketImage = croppedFile!;
-            await getTicketImgUrl(ticketImage).toString();
+            getTicketImgUrl(ticketImage).toString();
 
-            // individualProfileController.coverPhotoURL.value = downloadUrl!;
             isLoading = false;
             update();
           } catch (e) {
@@ -335,16 +315,12 @@ else{
         }
       }
     } on PlatformException {
-      // Handle exceptions related to camera, files and permissions
-
-        isLoading = false;
-        update();
+      isLoading = false;
+      update();
     } catch (e) {
-
-        isLoading = false;
-        update();
+      isLoading = false;
+      update();
     }
     update();
   }
-
 }

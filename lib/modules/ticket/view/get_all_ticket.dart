@@ -20,15 +20,13 @@ class GetAllTickets extends StatefulWidget {
   State<GetAllTickets> createState() => _GetAllTicketsState();
 }
 
-
 class _GetAllTicketsState extends State<GetAllTickets> {
-
   AllTicketController controller = Get.put(AllTicketController());
+
   @override
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,178 +37,178 @@ class _GetAllTicketsState extends State<GetAllTickets> {
           color: CustomTheme.white,
         ),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15))),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
         titleSpacing: -10,
         backgroundColor: CustomTheme.appTheme,
         title: const Padding(
           padding: EdgeInsets.all(10),
-          child: Text('My Tickets',style: TextStyle(color: Colors.white,fontSize: 16)),
+          child: Text('My Tickets', style: TextStyle(color: Colors.white, fontSize: 16)),
         ),
       ),
       body: GetBuilder<AllTicketController>(
-        init: AllTicketController(),
-        builder: (controller) {
-          var dataList = controller.getAllDetails.data;
-           return controller.isLoading == false ?
-           TicketListScreen(
-             dataList: dataList,):
-           const Center(child: CircularProgressIndicator.adaptive(),);
-              }),
+          init: AllTicketController(),
+          builder: (controller) {
+            var dataList = controller.getAllDetails.data;
+            return controller.isLoading == false
+                ? TicketListScreen(
+                    dataList: dataList,
+                  )
+                : const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+          }),
       floatingActionButton: Container(
-        width: Get.width*0.35
-      ,margin: EdgeInsets.all(10),
+        width: Get.width * 0.38,
+
         child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)),
-         onPressed: () async{
-           await controller.fetchTicketConfigListDetails();
-              Get.to(const CreateTicket());
-           },
-           backgroundColor: CustomTheme.appTheme,
-           child: FittedBox(
-             child: Row(
-               children: const [
-                 Text('   Create Ticket  ',style: TextStyle(color: Colors.white,fontSize: 16)),
-                 Icon(CupertinoIcons.add_circled,color: Colors.white,),
-               ],
-             ),
-           ),
-         ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          onPressed: () async {
+            await controller.fetchTicketConfigListDetails();
+            await Get.to(const CreateTicket());
+            controller.fetchTicketListDetails();
+          },
+          backgroundColor: CustomTheme.appTheme,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Create Ticket', style: TextStyle(color: Colors.white, fontSize: 16)),
+              Icon(
+                CupertinoIcons.add_circled,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
 class TicketListScreen extends StatelessWidget {
-  AllTicketController ticketController = Get.find();
-  TicketListScreen({
+  final AllTicketController ticketController = Get.find();
+
+  TicketListScreen({super.key,
     required this.dataList,
   });
+
   final List<Data>? dataList;
+
   @override
   Widget build(BuildContext context) {
-    return  dataList!.isNotEmpty ?
-      ListView.builder(
-      itemCount: dataList?.length,
-      itemBuilder: (context, index) {
-        var data = dataList?[index];
-        return  GestureDetector(onTap:() async {
-          await ticketController.fetchTicketConfigListDetails();
-          await ticketController.fetchTicketDetails('${data?.id.toString()}');
-          Get.to(ViewTicketDetails());
-        },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            margin: EdgeInsets.symmetric(
-                vertical: 10,horizontal: 10
-            ),
-            decoration: BoxDecoration(
-              color: CustomTheme.white,
-
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-              BoxShadow(
-              blurRadius: 3,
-              color: CustomTheme.grey,
-                blurStyle:BlurStyle.outer ,
-              //spreadRadius: 0.5,
-            ),
-            ],
-            ),
-            child: Column(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Ticket Id : ${data?.id} ',
-                            style:
-                            TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                          ),
-                          Text(
-                            'Priority : ${data?.priority.toString().capitalizeFirst}',
-                            style:
-                            TextStyle(fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              color:
-                              '${data?.priority}' == 'high' ? Colors.red : '${data?.priority}' == 'medium' ? Colors.blue : Colors.green
-                            ),
-                          ),
-                        ]
-
-          ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Flat : ${data?.unit} ',
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        Text(
-                          'Category ${data?.category} ',
-                          style: TextStyle(fontSize: 13),
-                        ),
-
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Created on :${dateConvert('${data?.createdOn}')}',
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-
-                        Text(
-                          'Added By  :  ${data?.addedBy}',
-                          style: TextStyle(fontSize: 13),
-                        ),
-
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Updated on :${dateConvert('${data?.updatedOn}')}'
-                          ,
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          'Status  : ${data?.status.toString().capitalizeFirst}',
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'Description  :  ${data?.description}',maxLines: 3,
-                      style: TextStyle(fontSize: 13),
-                    ),
-
-                  ],
-                ),
-                SizedBox(
-                  width: 25,
+    return dataList != null && dataList!.isNotEmpty
+        ? ListView.builder(
+            itemCount: dataList?.length,
+            itemBuilder: (context, index) {
+              var data = dataList?[index];
+              return GestureDetector(
+                onTap: () async {
+                  await ticketController.fetchTicketConfigListDetails();
+                  await ticketController.fetchTicketDetails('${data?.id.toString()}');
+                  await Get.to(ViewTicketDetails());
+                  ticketController.fetchTicketListDetails();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: CustomTheme.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 3,
+                        color: CustomTheme.grey,
+                        blurStyle: BlurStyle.outer,
+                        //spreadRadius: 0.5,
+                      ),
+                    ],
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      /*   Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                            Text(
+                              'Ticket Id : ${data?.id} ',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                            ),
+                            Text(
+                              'Priority : ${data?.priority.toString().capitalizeFirst}',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: '${data?.priority}' == 'high'
+                                      ? Colors.red
+                                      : '${data?.priority}' == 'medium'
+                                          ? Colors.blue
+                                          : Colors.green),
+                            ),
+                          ]),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Flat : ${data?.unit} ',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              Text(
+                                'Category ${data?.category} ',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Created on :${dateConvert('${data?.createdOn}')}',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                'Added By  :  ${data?.addedBy}',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Updated on :${dateConvert('${data?.updatedOn}')}',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                'Status  : ${data?.status.toString().capitalizeFirst}',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Description  :  ${data?.description}',
+                            maxLines: 3,
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 25,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            /*   Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -229,19 +227,20 @@ class TicketListScreen extends StatelessWidget {
                           ),
                         ],
                       ),*/
-                      SizedBox(
-                        height: 5,
+                            SizedBox(
+                              height: 60,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
-      },):Center(child: Text('No Ticket Found', style: TextStyle(fontSize: 18)),);
+              );
+            },
+          )
+        : Center(
+            child: Text('No Ticket Found', style: TextStyle(fontSize: 18)),
+          );
   }
-
-
 }
-

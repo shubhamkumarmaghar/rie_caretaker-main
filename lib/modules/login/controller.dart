@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:caretaker/modules/login/caretaker_login_new.dart';
 import 'package:caretaker/theme/custom_theme.dart';
+import 'package:caretaker/utils/loader_dialogs/progress_loader.dart';
 import 'package:caretaker/utils/view/rie_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,8 @@ class LoginController extends GetxController {
   TextEditingController unameController = TextEditingController();
   TextEditingController uPasswordController = TextEditingController();
 
-  void careTakerRequest() async {
+  void careTakerRequest(BuildContext context) async {
+    showProgressLoader(context);
     try {
       final response = await rieUserApiService.postApiCall(
           endPoint: AppUrls.careTakerLogin,
@@ -25,6 +27,7 @@ class LoginController extends GetxController {
             "password": uPasswordController.text,
           },
           fromLogin: true);
+      cancelLoader();
       if (response['message'] == 'failure') {
         log('Invalid Credential');
       } else {

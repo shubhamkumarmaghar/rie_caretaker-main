@@ -30,7 +30,7 @@ class RIEUserApiService extends GetxController {
     final info = await PackageInfo.fromPlatform();
     return {
       'admin-auth-token': (registeredToken ?? await _getRegisteredToken()).toString(),
-      'app-version': info.version.toString(),
+      'app-version':'1.8',/// info.version.toString(),
     };
   }
 
@@ -278,7 +278,6 @@ class RIEUserApiService extends GetxController {
     log('Status Code :: ${response.statusCode} -- $url    ${response.body}');
     switch (response.statusCode) {
       case 200:
-        log('Response Data :: ${response.body}');
         return response.body.isNotEmpty ? json.decode(response.body) : {'message': 'failure'};
       case 400:
         return _getErrorResponse(json.decode(response.body));
@@ -428,7 +427,7 @@ class RIEUserApiService extends GetxController {
       Dio dio = Dio();
       final response = await dio.put(endPoint, options: Options(headers: await getHeaders), data: bodyParams);
       log(response.toString());
-      return response.statusCode == 200 ? {'msg': 'success'} : {'msg': 'failure'};
+      return response.statusCode == 200 ? response.data : {'message': 'failure'};
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -448,7 +447,7 @@ class RIEUserApiService extends GetxController {
       Dio dio = Dio();
       final response = await dio.post(endPoint, options: Options(headers: await getHeaders), data: bodyParams);
       log(response.toString());
-      return response.statusCode == 200 ? {'msg': 'success'} : {'msg': 'failure'};
+      return response.statusCode == 200 ? response.data : {'message': 'failure'};
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {

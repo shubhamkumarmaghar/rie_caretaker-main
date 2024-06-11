@@ -10,6 +10,7 @@ PreferredSizeWidget appBarWidget(
   return AppBar(
     toolbarHeight: 80,
     backgroundColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.white),
     elevation: 0,
     title: Padding(
       padding:
@@ -23,16 +24,6 @@ PreferredSizeWidget appBarWidget(
         ],
       ),
     ),
-    // actions: [
-    //   GestureDetector(
-    //     onTap: () {
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const ProfileScreen()));
-    //     },
-    //     child: imgLoadWid(AppConfig.imagesRootUrl + image, userVec, 45, 45,
-    //         BoxFit.cover, 100),
-    //   ),
-    // ],
     leading: isVisible
         ? IconButton(
             onPressed: () {

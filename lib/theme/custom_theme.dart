@@ -11,7 +11,8 @@ class CustomTheme {
   static final Color skyBlue = Color(0xff639fdc); // original one
  // static final Color skyBlue = Color(0xff2596be);
  // static final Color skyBlue =Color(0xff3377fe);
-  static final Color appTheme =Color(0xff0668E1);
+ // static final Color appTheme =Color(0xff0668E1);
+  static final Color appTheme =Color(0xff12086F);
   static final Color appTheme1 =Color(0xff17A9FD);
   static final Color appTheme2 =Color(0xffadb9d3);
   static final Color appTheme4 =Color(0xffedf0f5);

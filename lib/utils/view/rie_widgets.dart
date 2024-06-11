@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../theme/custom_theme.dart';
 
 class RIEWidgets {
+
   static void showLoaderDialog(
       {required BuildContext context, required String message}) {
     AlertDialog alert = AlertDialog(
@@ -34,6 +36,7 @@ class RIEWidgets {
       },
     );
   }
+
 
   static void showLoaderDialogWithoutText({required BuildContext context}) {
     AlertDialog alert = AlertDialog(
