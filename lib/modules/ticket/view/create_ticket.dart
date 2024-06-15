@@ -166,7 +166,7 @@ class _CreateTicketState extends State<CreateTicket> {
                           hint: Text('Selcet Flat'),
                           onChanged: (flats) {
                             setState(() => controller.selectedFlats = flats);
-
+                            controller.selectedFlats?.tenants?[0].title;
                             log('selected flats ${controller.selectedFlats?.title.toString()}');
                           },
                           value: controller.selectedFlats,
@@ -185,6 +185,20 @@ class _CreateTicketState extends State<CreateTicket> {
                     ])
                   : Container(),
               height(0.02),
+              controller.selectedFlats?.tenants != null && controller.selectedFlats?.tenants!.length !=0 ?Column(
+                children: [
+                  Text(
+                    'Tenent Name : ${controller.selectedFlats?.tenants?[0].title}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: CustomTheme.black,
+                    ),
+                  ),
+                  height(0.02),
+                ],
+              ):SizedBox(),
+
               Text(
                 'Choose Category',
                 style: TextStyle(

@@ -151,18 +151,47 @@ class Properties {
 class Flats {
   String? title;
   int? value;
+  List<Tenants>? tenants;
 
-  Flats({this.title, this.value});
+  Flats({this.title, this.value,this.tenants});
 
   Flats.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     value = json['value'];
+    if (json['tenants'] != null) {
+      tenants = <Tenants>[];
+      json['tenants'].forEach((v) {
+        tenants!.add(new Tenants.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = title;
     data['value'] = value;
+    if (this.tenants != null) {
+      data['tenants'] = this.tenants!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Tenants {
+  String? title;
+  int? value;
+
+  Tenants({this.title, this.value});
+
+  Tenants.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['value'] = this.value;
     return data;
   }
 }
