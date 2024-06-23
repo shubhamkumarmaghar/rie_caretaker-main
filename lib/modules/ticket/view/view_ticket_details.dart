@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:caretaker/modules/ticket/model/ticketModel.dart';
 import 'package:caretaker/utils/view/rie_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import '../../../utils/const/cached_image_placeholder.dart';
 import '../../../utils/const/image_view.dart';
 import '../../../utils/view/custom_textField_title.dart';
 import '../controller/get_all_ticket_controller.dart';
+import '../model/ticket_config_model.dart';
 
 class ViewTicketDetails extends StatefulWidget {
   const ViewTicketDetails({super.key});
@@ -24,13 +26,18 @@ class ViewTicketDetails extends StatefulWidget {
 
 class _ViewTicketDetailsState extends State<ViewTicketDetails> {
   AllTicketController controller = Get.find();
-
+  Tenants? selectedSupervisor;
   //var data;
   @override
   void initState() {
     super.initState();
     controller.ticketDescription.text = '${controller.getSingleTicketDetails.data?.description}';
     controller.selectedStatus = '${controller.getSingleTicketDetails.data?.status}';
+    if(controller.getSingleTicketDetails.data!.assignToId != null) {
+      controller.selectedSupervisor =
+          controller.supervisorList?.firstWhere((element) => element.value ==
+              controller.getSingleTicketDetails.data!.assignToId);
+    }
     controller.getSingleTicketDetails.data?.proofs?.forEach((element) {
       controller.ticketImgUrl.add('${element.url}');
     });
@@ -43,6 +50,8 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
     controller.ticketCategoriesList?.clear();
     controller.ticketStatusList?.clear();
     controller.ticketImgUrl.clear();
+    controller.addticketImgUrl.clear();
+    controller.selectedSupervisor=selectedSupervisor;
     super.dispose();
   }
 
@@ -76,13 +85,13 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
-                      height: Get.height * 0.5,
+                      height: Get.height * 0.52,
                       child: ListView(
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -91,7 +100,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                             ],
                           ),
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,64 +111,127 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                           ),
 
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
 
                           customText(text: 'Description : ${data?.description}'),
                           const SizedBox(
                             height: 10,
                           ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Update Status',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'malgun',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
 
+                          data?.tenant != null ? tenantDetails(tenant: data?.tenant):Container(),
                           const SizedBox(height: 8),
-                          Container(
-                            alignment: Alignment.center,
-                            // margin: EdgeInsets.only(left: 25,right: 25,top: 20),
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            height: 50,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: CustomTheme.appTheme4,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 2,
-                                  offset: const Offset(0, 2),
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween
+                              ,children: [
+                            Column(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              const Text(
+                                'Update Status',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontFamily: 'malgun',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                alignment: Alignment.center,
+                                // margin: EdgeInsets.only(left: 25,right: 25,top: 20),
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                height: 50,
+                                width: Get.width*0.4,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: CustomTheme.appTheme4,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 2,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
 
-                            child: DropdownButton<String>(
-                              underline: SizedBox(),
-                              hint: const Text('Selcet Status'),
-                              isExpanded: true,
-                              onChanged: (status) {
-                                setState(() => controller.selectedStatus = status);
-                                log('selected status ${controller.selectedStatus}');
-                              },
-                              value: controller.selectedStatus,
-                              items: controller.ticketStatusList?.map<DropdownMenuItem<String>>((value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Row(
-                                    children: [
-                                      Text(value),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                                child: DropdownButton<String>(
+                                  underline: SizedBox(),
+                                  hint: const Text('Selcet Status'),
+                                  isExpanded: true,
+                                  onChanged: (status) {
+                                    setState(() => controller.selectedStatus = status);
+                                    log('selected status ${controller.selectedStatus}');
+                                  },
+                                  value: controller.selectedStatus,
+                                  items: controller.ticketStatusList?.map<DropdownMenuItem<String>>((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Row(
+                                        children: [
+                                          Text(value),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],),
+                            Column(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              const Text(
+                                'Select Supervisor',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontFamily: 'malgun',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                alignment: Alignment.center,
+                                // margin: EdgeInsets.only(left: 25,right: 25,top: 20),
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                height: 50,
+                                width: Get.width*0.4,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: CustomTheme.appTheme4,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 2,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+
+                                child: DropdownButton<Tenants>(
+                                  underline: SizedBox(),
+                                  hint: const Text('Select Supervisor'),
+                                  isExpanded: true,
+                                  onChanged: (supervisor) {
+                                    setState(() => controller.selectedSupervisor = supervisor);
+                                    log('selected supervisor ${controller.selectedSupervisor?.title}');
+                                  },
+                                  value: controller.selectedSupervisor,
+                                  items: controller.supervisorList?.map<DropdownMenuItem<Tenants>>((value) {
+                                    return DropdownMenuItem<Tenants>(
+                                      value: value,
+                                      child: Row(
+                                        children: [
+                                          Text(value.title.toString()),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],)
+                          ]),
+
+
+
+
                           const SizedBox(height: 16),
                           Obx(
                             () => Container(
@@ -251,6 +323,7 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                               ),
                               GestureDetector(
                                 onTap: () async {
+                                  log('Shubham ${controller.selectedSupervisor?.value.toString()}');
                                   await controller.updateTicket(
                                       context: context,
                                       ticketId: '${data?.id.toString()}',
@@ -258,7 +331,10 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
                                       propId: '${data?.propId.toString()}',
                                       ticketCate: '${data?.category.toString()}',
                                       ticketDesc: controller.ticketDescription.text,
-                                      ticketStat: controller.selectedStatus.toString());
+                                      ticketStat: controller.selectedStatus.toString(),
+                                      supervisor: controller.selectedSupervisor?.value.toString()
+
+                                  );
                                 },
                                 child: Container(
                                   width: Get.width * 0.32,
@@ -340,6 +416,20 @@ class _ViewTicketDetailsState extends State<ViewTicketDetails> {
     );
   }
 
+  Widget tenantDetails( { Tenant? tenant}){
+   return Container(child: Column(
+       crossAxisAlignment:CrossAxisAlignment.start,children: [
+     customText(text: 'Tenant Details :',size: 16,color: Colors.orange),
+     Row(
+       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+       children: [
+         customText(text: 'Name :  ${tenant?.name}'),
+         customText(text: 'Phone :  ${tenant?.phone}'),
+       ],
+     ),
+     customText(text: 'Email :  ${tenant?.email}'),
+   ]),);
+  }
   Widget customText(
       {required String text,
       double size = 14,

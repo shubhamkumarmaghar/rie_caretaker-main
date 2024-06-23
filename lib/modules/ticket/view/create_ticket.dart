@@ -45,6 +45,7 @@ class _CreateTicketState extends State<CreateTicket> {
     controller.ticketPropertiesList?.clear();
     controller.ticketCategoriesList?.clear();
     controller.ticketStatusList?.clear();
+    controller.addticketImgUrl.clear();
   }
 
   @override
@@ -186,9 +187,18 @@ class _CreateTicketState extends State<CreateTicket> {
                   : Container(),
               height(0.02),
               controller.selectedFlats?.tenants != null && controller.selectedFlats?.tenants!.length !=0 ?Column(
-                children: [
+                crossAxisAlignment: CrossAxisAlignment.start,children: [
                   Text(
-                    'Tenent Name : ${controller.selectedFlats?.tenants?[0].title}',
+                    'Tenant Name : ${controller.selectedFlats?.tenants?[0].title}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: CustomTheme.black,
+                    ),
+                  ),
+                  height(0.02),
+                  Text(
+                    'Booking Id : ${controller.selectedFlats?.tenants?[0].value}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -405,6 +415,7 @@ class _CreateTicketState extends State<CreateTicket> {
         padding: EdgeInsets.only(left: 20,right: 20,bottom: 20),
         child: GestureDetector(
           onTap: () async {
+            String? bookingId ;
             if (controller.selectedProperty?.value == null) {
               RIEWidgets.getToast(message: 'Please Select Property', color: CustomTheme.white);
               return;
@@ -422,12 +433,16 @@ class _CreateTicketState extends State<CreateTicket> {
               RIEWidgets.getToast(message: 'Please Select tickets Category', color: CustomTheme.white);
               return;
             }
+            if(controller.selectedFlats?.tenants != null && controller.selectedFlats?.tenants!.length !=0){
+              bookingId = controller.selectedFlats?.tenants?[0].value.toString();
+            }
             await controller.createTicket(
               propertyId: '${controller.selectedProperty?.value.toString()}',
               flatId: '${controller.selectedFlats?.value.toString()}',
               ticketCate: controller.selectedCategory.toString(),
               ticketDesc: controller.ticketDescription.text,
               ticketStat: controller.selectedStatus.toString(),
+                  bookingId: controller.selectedFlats?.tenants?[0].value.toString(),
               context: context
             );
           },

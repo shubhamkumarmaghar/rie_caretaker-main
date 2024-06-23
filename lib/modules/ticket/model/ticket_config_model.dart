@@ -94,8 +94,9 @@ class Data {
   List<String>? categories;
   List<String>? status;
   List<Properties>? properties;
+  List<Tenants>? supervisors;
 
-  Data({this.categories, this.status, this.properties});
+  Data({this.categories, this.status, this.properties,this.supervisors});
 
   Data.fromJson(Map<String, dynamic> json) {
     categories = json['categories'].cast<String>();
@@ -106,6 +107,12 @@ class Data {
         properties!.add(new Properties.fromJson(v));
       });
     }
+    if (json['supervisors'] != null) {
+      supervisors = <Tenants>[];
+      json['supervisors'].forEach((v) {
+        supervisors!.add(new Tenants.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +121,9 @@ class Data {
     data['status'] = this.status;
     if (properties != null) {
       data['properties'] = properties!.map((v) => v.toJson()).toList();
+    }
+    if (this.supervisors != null) {
+      data['supervisors'] = this.supervisors!.map((v) => v.toJson()).toList();
     }
     return data;
   }

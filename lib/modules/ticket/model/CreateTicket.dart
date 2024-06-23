@@ -5,6 +5,8 @@ class Createticket {
   String? category;
   String? description;
   String? status;
+  String? bookingId;
+  String? supervisor;
   List<Proofs>? proofs;
 
   Createticket(
@@ -14,6 +16,8 @@ class Createticket {
         this.category,
         this.description,
         this.status,
+        this.bookingId,
+        this.supervisor,
         this.proofs});
 
   Createticket.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class Createticket {
     category = json['category'];
     description = json['description'];
     status = json['status'];
+    bookingId=json['bookingId'];
+    supervisor=json['assignToId'];
     if (json['proofs'] != null) {
       proofs = <Proofs>[];
       json['proofs'].forEach((v) {
@@ -39,6 +45,8 @@ class Createticket {
     data['category'] = this.category;
     data['description'] = this.description;
     data['status'] = this.status;
+    data['bookingId'] = this.bookingId;
+    data['assignToId'] = this.supervisor;
     if (this.proofs != null) {
       data['proofs'] = this.proofs!.map((v) => v.toJson()).toList();
     }

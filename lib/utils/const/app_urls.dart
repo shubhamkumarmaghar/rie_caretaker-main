@@ -15,14 +15,6 @@ class AppUrls {
   static const productionUrl  = "https://api.rentiseazy.com/aa/";
   static const developmentUrl = "https://test-api.rentiseazy.com/aa/";
   static const baseUrl = productionUrl;
-  static const imagesRootUrl =
-      "http://networkgroups.in/prisma/rentitezy/images/";
-  // static const rootUrl = "http://networkgroups.in/prisma/rentitezy/";
-  // static const imagesRootUrl =
-  //     "http://networkgroups.in/prisma/rentitezy/images/";
-  // static const rootUrl = "http://192.168.1.204:8136/prisma/rentitezy/";
-  // static const imagesRootUrl =
-  //     "http://192.168.1.204:8136/prisma/rentitezy/images/";
   static const careTaker = "${baseUrl}leads";
   static const careTakerLogin = "${baseUrl}login";
   static const properties = "${baseUrl}listingDetail";

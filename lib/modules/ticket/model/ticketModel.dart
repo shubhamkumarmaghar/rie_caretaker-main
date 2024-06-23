@@ -31,7 +31,9 @@ class Data {
   String? createdOn;
   String? updatedOn;
   dynamic closedOn;
+  dynamic assignToId;
   int? createdBy;
+  Tenant? tenant;
   List<FollowUps>? followUps;
   List<Proofs>? proofs;
 
@@ -49,7 +51,9 @@ class Data {
         this.updatedOn,
         this.closedOn,
         this.createdBy,
+        this.tenant,
         this.followUps,
+        this.assignToId,
       this.proofs});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -65,12 +69,15 @@ class Data {
     updatedOn = json['updatedOn'];
     closedOn = json['closedOn'];
     createdBy = json['createdBy'];
+    this.assignToId = json['assignToId'];
     if (json['followUps'] != null) {
       followUps = <FollowUps>[];
       json['followUps'].forEach((v) {
         followUps!.add(new FollowUps.fromJson(v));
       });
     }
+    tenant =
+    json['tenant'] != null ? new Tenant.fromJson(json['tenant']) : null;
     if (json['proofs'] != null) {
       proofs = <Proofs>[];
       json['proofs'].forEach((v) {
@@ -93,12 +100,41 @@ class Data {
     data['updatedOn'] = this.updatedOn;
     data['closedOn'] = this.closedOn;
     data['createdBy'] = this.createdBy;
+    data['assignToId'] = this.assignToId;
     if (this.followUps != null) {
       data['followUps'] = this.followUps!.map((v) => v.toJson()).toList();
+    }
+    if (this.tenant != null) {
+      data['tenant'] = this.tenant!.toJson();
     }
     if (this.proofs != null) {
       data['proofs'] = this.proofs!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class Tenant {
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+
+  Tenant({this.id, this.name, this.email, this.phone});
+
+  Tenant.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    phone = json['phone'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['phone'] = this.phone;
     return data;
   }
 }
