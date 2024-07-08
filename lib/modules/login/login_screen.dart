@@ -24,8 +24,8 @@ class _LoginState extends State<LoginScreen> {
       body: Container(
           width: screenWidth,
           height: screenHeight,
-          padding: const EdgeInsets.only(top: 20),
-          margin: const EdgeInsets.all(5),
+          padding: const EdgeInsets.only(top: 20,left: 15,right: 15),
+
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -40,8 +40,30 @@ class _LoginState extends State<LoginScreen> {
                       'assets/images/login_image.png',
                       fit: BoxFit.fill,
                     )),
-                title("Welcome", 27),
-                titleClr("RENTISEASY ADMIN", 20, Colors.grey, FontWeight.bold),
+                height(0.05),
+                Text(
+                  'Welcome',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: AppUrls.fontFamilyKanit,
+                      color: CustomTheme.appTheme,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'to',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: AppUrls.fontFamilyKanit,
+                      color: CustomTheme.appTheme,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                ),
+                titleClr("Sowerent Admin", 24, CustomTheme.appTheme, FontWeight.bold),
                 height(0.05),
                 inputField('Phone Number', loginController.unameController, 5),
                 inputField('Password', loginController.uPasswordController, 10),

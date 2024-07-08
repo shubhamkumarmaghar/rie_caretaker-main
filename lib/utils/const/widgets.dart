@@ -22,6 +22,7 @@ Widget loading() {
 Widget title(
   String title,
   double fSize,
+
 ) {
   return Text(
     title,

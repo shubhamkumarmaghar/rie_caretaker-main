@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:caretaker/modules/login/login_screen.dart';
 import 'package:caretaker/theme/custom_theme.dart';
 import 'package:caretaker/utils/const/app_urls.dart';
+import 'package:caretaker/utils/const/images_const.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -226,11 +227,11 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9), child: child ?? const Text(''));
       },
-      title: 'RENTISEASY ADMIN',
+      title: 'SoWeRent ADMIN',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        backgroundColor: Colors.white,
+        //backgroundColor: Colors.white,
         primaryColor: CustomTheme.appTheme,
       ),
       home: const SplashScreenPage(),
@@ -283,12 +284,13 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Center(
-      child: Image.asset(
-        'assets/images/splash_logo.png',
-        height: 100,
-        width: 100,
-      ),
-    ));
+          child: Image.asset(
+            appLogo,
+            height: 200,
+            width: 200,
+          ),
+        ));
   }
 }
