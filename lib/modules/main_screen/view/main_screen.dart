@@ -13,6 +13,8 @@ import '../../../main.dart';
 import '../../../theme/custom_theme.dart';
 import '../../../utils/const/app_urls.dart';
 import '../../../utils/const/appbar_widget.dart';
+import '../../../utils/const/images_const.dart';
+import '../../../utils/const/widgets.dart';
 import '../../../utils/view/rie_widgets.dart';
 import '../../login/login_screen.dart';
 
@@ -81,7 +83,7 @@ class MainPageState extends State<MainPage> {
     controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
 
-      appBar: appBarWidget('RENTISEASY ADMIN', '', context, false),
+      appBar: appBarWidget('SoWeRent Admin', '', context, false),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
@@ -116,6 +118,7 @@ class MainPageState extends State<MainPage> {
                 const SizedBox(
                   width: 20,
                 ),
+
                 GestureDetector(
                     onTap: () {
                       Get.to(ProfilePage()
@@ -311,7 +314,7 @@ class MainPageState extends State<MainPage> {
         height: Get.height,
         child: ListView(
           children: [
-            SizedBox(height: Get.height*0.05,),
+
      /*  GetStorage().read(Constants.callSync)==1 ? Container(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
         height: _mainHeight * 0.06,
@@ -356,6 +359,35 @@ class MainPageState extends State<MainPage> {
           ),
         ),
       ):Container(),*/
+            DrawerHeader(
+                decoration: BoxDecoration(
+                    color: CustomTheme.appTheme,
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25))),
+                child: UserAccountsDrawerHeader(
+                  margin: EdgeInsets.only(
+                    top: 0,
+                    bottom: 0
+                  ),
+                  decoration: BoxDecoration(
+                    color: CustomTheme.appTheme,
+                  ),
+                  accountName: Text(
+                    GetStorage().read(Constants.usernamekey) ??"",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  accountEmail: Text(GetStorage().read(Constants.emailkey) ??''),
+                  currentAccountPictureSize: Size.square(50),
+                  currentAccountPicture:  CircleAvatar(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(screenHeight * 0.07),
+                      child: imgLoadWid(GetStorage().read(Constants.profileUrl), 'assets/images/user_vec.png',
+                          screenHeight * 0.11, screenWidth * 0.24, BoxFit.cover,10),
+                    ), //Text
+                  ), //circleAvatar
+                ), //UserAccountDrawerHeader
+            ),
             getTile(
               context: context,
               leading: Icon(

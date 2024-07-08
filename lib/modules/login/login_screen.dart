@@ -63,7 +63,7 @@ class _LoginState extends State<LoginScreen> {
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
-                titleClr("Sowerent Admin", 24, CustomTheme.appTheme, FontWeight.bold),
+                titleClr("SoWeRent Admin", 24, CustomTheme.appTheme, FontWeight.bold),
                 height(0.05),
                 inputField('Phone Number', loginController.unameController, 5),
                 inputField('Password', loginController.uPasswordController, 10),
