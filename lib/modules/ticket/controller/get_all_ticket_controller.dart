@@ -27,6 +27,7 @@ class AllTicketController extends GetxController {
   //String? selectFlat = 'Select Flat';
   File ticketImage = File('');
   RxList<String> ticketImgUrl = <String>[].obs;
+  RxList<String> addticketImgUrl = <String>[].obs;
   final ImagePicker _picker = ImagePicker();
   final RIEUserApiService _apiService = RIEUserApiService();
   TicketListModel getAllDetails = TicketListModel();
@@ -35,9 +36,10 @@ class AllTicketController extends GetxController {
   List<String>? ticketCategoriesList;
   List<String>? ticketStatusList;
   List<Properties>? ticketPropertiesList;
+  List<Tenants>? supervisorList;
   List<Flats>? flatsList;
   Properties? selectedProperty;
-
+  Tenants? selectedSupervisor;
   Flats? selectedFlats;
   String? selectedCategory;
 
@@ -63,6 +65,7 @@ class AllTicketController extends GetxController {
     final data = response as Map<String, dynamic>;
     if (data['message'].toString().toLowerCase().contains('success')) {
       getAllDetails = TicketListModel.fromJson(data);
+
       update();
       isLoading = false;
     } else {
@@ -86,8 +89,8 @@ class AllTicketController extends GetxController {
       ticketCategoriesList = ticketConfigModel.data?.categories ?? [];
 
       ticketStatusList = ticketConfigModel.data?.status ?? [];
-
-      ticketStatusList!.forEach((element) {
+      supervisorList = ticketConfigModel.data?.supervisors ?? [];
+      supervisorList!.forEach((element) {
         log('dddd ${element}');
       });
 
@@ -108,12 +111,14 @@ class AllTicketController extends GetxController {
     required String ticketCate,
     required String ticketDesc,
     required String ticketStat,
+    String? bookingId,
     required BuildContext context,
   }) async {
+    log('sdsdd $bookingId');
     showProgressLoader(context);
     String url = AppUrls.ticket;
     List<Map<String, String>> imgList = [];
-    for (var element in ticketImgUrl) {
+    for (var element in addticketImgUrl) {
       imgList.add({'url': element});
     }
     Createticket c = Createticket.fromJson({
@@ -122,14 +127,12 @@ class AllTicketController extends GetxController {
       "category": ticketCate,
       "description": ticketDesc,
       "status": ticketStat,
+     if(bookingId != '')"bookingId":bookingId,
       "proofs": imgList
     });
 
     log('create ticket params :: ${c.toJson()}');
-    final response = await _apiService.postApiCallFormData(
-      endPoint: url,
-      bodyParams: c.toJson(),
-    );
+    final response = await _apiService.postApiCallFormData(endPoint: url, bodyParams: c.toJson(),);
 
     final data = response as Map<String, dynamic>;
     cancelLoader();
@@ -149,12 +152,14 @@ class AllTicketController extends GetxController {
     required String ticketStat,
     required String ticketId,
     required String propId,
+    String? supervisor,
     required BuildContext context,
   }) async {
+    log('shubham $supervisor');
     showProgressLoader(context);
     String url = AppUrls.ticket;
     List<Map<String, String>> imgList = [];
-    for (var element in ticketImgUrl) {
+    for (var element in addticketImgUrl) {
       imgList.add({'url': element});
     }
     Createticket c = Createticket.fromJson({
@@ -164,7 +169,8 @@ class AllTicketController extends GetxController {
       "category": ticketCate,
       "description": ticketDesc,
       "status": ticketStat,
-      "proofs": imgList
+      "proofs": imgList,
+      "assignToId":supervisor
     });
     log('update ticket params :: ${c.toJson()}');
     final response = await _apiService.putApiCallFormData(
@@ -214,6 +220,7 @@ class AllTicketController extends GetxController {
       String url = '${data['url']}';
       if (url.isNotEmpty) {
         ticketImgUrl.add(url);
+        addticketImgUrl.add(url);
         ticketImage = File('');
       }
       log('log Url ${data['url']}');
