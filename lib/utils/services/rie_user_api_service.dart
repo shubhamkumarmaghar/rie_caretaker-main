@@ -27,10 +27,10 @@ class RIEUserApiService extends GetxController {
   }
 
   Future<Map<String, String>> get getHeaders async {
-    final info = await PackageInfo.fromPlatform();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return {
       'admin-auth-token': (registeredToken ?? await _getRegisteredToken()).toString(),
-      'app-version':'1.8',/// info.version.toString(),
+      'app-version': packageInfo.version.toString(),
     };
   }
 
@@ -442,7 +442,6 @@ class RIEUserApiService extends GetxController {
     // required FormData formData
   }) async {
     log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
-
     try {
       Dio dio = Dio();
       final response = await dio.post(endPoint, options: Options(headers: await getHeaders), data: bodyParams);

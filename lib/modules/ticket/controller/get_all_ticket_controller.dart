@@ -131,7 +131,6 @@ class AllTicketController extends GetxController {
       "proofs": imgList
     });
 
-    log('create ticket params :: ${c.toJson()}');
     final response = await _apiService.postApiCallFormData(endPoint: url, bodyParams: c.toJson(),);
 
     final data = response as Map<String, dynamic>;

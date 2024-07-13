@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../../theme/custom_theme.dart';
 import '../../../utils/const/cached_image_placeholder.dart';
 import '../../../utils/const/image_view.dart';
@@ -436,6 +437,7 @@ class _CreateTicketState extends State<CreateTicket> {
             if(controller.selectedFlats?.tenants != null && controller.selectedFlats?.tenants!.length !=0){
               bookingId = controller.selectedFlats?.tenants?[0].value.toString();
             }
+
             await controller.createTicket(
               propertyId: '${controller.selectedProperty?.value.toString()}',
               flatId: '${controller.selectedFlats?.value.toString()}',
